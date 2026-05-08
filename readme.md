@@ -14,3 +14,8 @@
 - [جلسه ۰۸: توجه انتخابی و پردازش گفتار در دستیارهای صوتی](notes/08.md)
 - [جلسه ۰۹: مدل‌های محاسباتی شنیداری و پارادایم‌های توجه](notes/09.md)
 - [جلسه ۱۰: مدل Whisper و ادامه بحث مدل‌های محاسباتی شنیداری](notes/10.md)
+
+## جزوه
+
+- [نسخه PDF جزوه](booklet/computational_cognitive_science_booklet.pdf)
+- [سورس LaTeX جزوه](booklet/computational_cognitive_science_booklet.tex)
