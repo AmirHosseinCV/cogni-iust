@@ -1,0 +1,579 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,top=18mm,bottom=19mm,right=19mm,left=19mm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage[explicit]{titlesec}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage[colorlinks=true,linkcolor=blue!45!black]{hyperref}
+\usepackage{xepersian}
+
+\settextfont[
+  Path={../booklet/font/},
+  UprightFont={IRLotusICEE.ttf},
+  BoldFont={IRLotusICEE_Bold.ttf},
+  BoldItalicFont={IRLotusICEE_BoldIranic.ttf},
+  ItalicFont={IRLotusICEE_Iranic.ttf},
+  FontFace={b}{n}{IRLotusICEE_Bold.ttf},
+  FontFace={bx}{n}{IRLotusICEE_Bold.ttf},
+  FontFace={b}{it}{IRLotusICEE_BoldIranic.ttf},
+  FontFace={bx}{it}{IRLotusICEE_BoldIranic.ttf},
+  FontFace={m}{sl}{IRLotusICEE_Iranic.ttf},
+  Scale=1.15
+]{IRLotusICEE.ttf}
+\setlatintextfont[
+  Path={../booklet/font/},
+  BoldFont={LiberationSerif-Bold.ttf},
+  BoldItalicFont={LiberationSerif-BoldItalic.ttf},
+  ItalicFont={LiberationSerif-Italic.ttf}
+]{LiberationSerif-Regular.ttf}
+\setdigitfont[Path={../booklet/font/},Scale=1.15]{IRLotusICEE.ttf}
+\defpersianfont\titlefont[Path={../booklet/font/},Scale=1]{IRTitr.ttf}
+
+\definecolor{navy}{RGB}{20,65,105}
+\definecolor{greenback}{RGB}{238,248,241}
+\definecolor{yellowback}{RGB}{255,248,225}
+
+\newcommand{\eng}[1]{\lr{#1}}
+\newcommand{\term}[2]{\textbf{#1} \eng{(#2)}}
+\newcommand{\key}[1]{\textcolor{navy}{\textbf{#1}}}
+
+\newtcolorbox{formula}[1]{
+  enhanced,breakable,colback=greenback,colframe=green!45!black,title={#1},
+  fonttitle=\bfseries,boxrule=.6pt,arc=1.5mm,
+  right=3.5mm,left=3.5mm,top=2mm,bottom=2mm,
+  before skip=7pt,after skip=7pt,
+  boxed title style={left=2mm,right=2mm,top=.7mm,bottom=.7mm}
+}
+\newtcolorbox{trap}[1]{
+  enhanced,breakable,colback=yellowback,colframe=orange!65!black,title={#1},
+  fonttitle=\bfseries,boxrule=.6pt,arc=1.5mm,
+  right=3.5mm,left=3.5mm,top=2mm,bottom=2mm,
+  before skip=7pt,after skip=7pt
+}
+
+\setlist[itemize,1]{
+  label=\textcolor{navy}{\large\textbullet},
+  rightmargin=7mm,leftmargin=2mm,topsep=4pt,itemsep=3.5pt,parsep=1pt
+}
+\setlist[itemize,2]{
+  label=\textcolor{navy}{--},
+  rightmargin=7mm,leftmargin=2mm,topsep=2pt,itemsep=2.5pt,parsep=0pt
+}
+\setlist[enumerate,1]{
+  label=\textcolor{navy}{\arabic*.},
+  rightmargin=9mm,leftmargin=2mm,topsep=4pt,itemsep=3pt
+}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+\setlength{\fboxsep}{5pt}
+\linespread{1.12}
+
+\titleformat{\section}[block]
+  {\normalfont\titlefont\Large\color{white}}
+  {}{0pt}
+  {\colorbox{navy}{\parbox{\dimexpr\textwidth-2\fboxsep\relax}{\raggedleft\strut#1\strut}}}
+\titlespacing*{\section}{0pt}{13pt}{10pt}
+
+\titleformat{\subsection}[hang]
+  {\normalfont\bfseries\large\color{navy}}
+  {\thesubsection}{7pt}{#1}
+  [\vspace{2pt}\color{navy!35}\titlerule]
+\titlespacing*{\subsection}{0pt}{11pt}{7pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\small مرور فصل ۷: مدل‌های اسپایکی مدرن}
+\fancyhead[L]{\small علوم شناختی محاسباتی}
+\fancyfoot[C]{\thepage}
+\setlength{\headheight}{14pt}
+
+\begin{document}
+
+\begin{center}
+  {\titlefont\LARGE خلاصهٔ امتحانی فصل ۷}\\[3pt]
+  {\Large مدل‌های اسپایکی مدرن}\\[3pt]
+  {\small مرور تفکیک‌شدهٔ مفاهیم، معماری‌ها و فرمول‌ها}
+\end{center}
+
+\section{بخش اول: \eng{Spiking Transformer} و \eng{SpikeFormer}}
+
+\subsection{از \eng{Deep SNN} به \eng{Transformer} اسپایکی}
+
+\begin{itemize}
+  \item در \eng{SNN}، داده زمان‌محور و ورودی و خروجی معمولاً اسپایک‌های صفر و یک‌اند؛ مزیت اصلی، پردازش رویدادمحور و مصرف انرژی کمتر است.
+  \item در \eng{Deep SNN} نظارت‌شده، عبور گرادیان از تابع گسستهٔ اسپایک با \term{گرادیان جایگزین}{Surrogate Gradient} ممکن می‌شود.
+  \item لایهٔ خطی اسپایکی، وزن را در اسپایک ضرب و سپس خروجی اسپایکی جدیدی تولید می‌کند:
+  \[
+  W\times\mathrm{spike}
+  \]
+  \item \textbf{\eng{SpikeFormer}}: ترکیب معماری \eng{Transformer} با شبکهٔ عصبی اسپایکی برای دستیابی به مدل قدرتمندتر و کم‌مصرف‌تر.
+  \item سه جزء ضروری:
+  \begin{enumerate}
+    \item کدگذاری دادهٔ ورودی به اسپایک؛
+    \item توجه اسپایکی؛
+    \item بلوک \eng{MLP} اسپایکی.
+  \end{enumerate}
+\end{itemize}
+
+\subsection{کدگذاری ورودی}
+
+\begin{itemize}
+  \item دادهٔ پیوسته باید به دنباله‌ای از صفر و یک در چند گام زمانی تبدیل شود.
+  \item \textbf{\eng{Time Step}} با \(T\) نشان داده می‌شود؛ مثلاً \(T=4\) یعنی هر مقدار در چهار گام زمانی بازنمایی می‌شود.
+  \item دو هدف کدگذاری:
+  \begin{itemize}
+    \item تبدیل مقدار پیوسته به اسپایک؛
+    \item پخش اطلاعات در طول زمان، به‌طوری که مقدار بزرگ‌تر معمولاً نرخ اسپایک بیشتری بسازد.
+  \end{itemize}
+\end{itemize}
+
+\subsection{کدگذاری تصویر و \eng{Rate Encoding}}
+
+\begin{formula}{نرمال‌سازی پیکسل}
+\[
+\boxed{x_{\mathrm{norm}}=\frac{x}{255}}
+\]
+\end{formula}
+
+\begin{itemize}
+  \item برای \(T=4\)، تعداد تقریبی اسپایک از \(x_{\mathrm{norm}}T\) به دست می‌آید.
+  \item مثال:
+  \[
+  [0.2,0.8,0.5,0.5]\times4=[0.8,3.2,2,2]
+  \]
+  \[
+  \mathrm{round}(\cdot)=[1,3,2,2]
+  \]
+  یعنی ویژگی‌ها به‌ترتیب یک، سه، دو و دو اسپایک در کل بازه تولید می‌کنند.
+  \item \textbf{\eng{Rate Encoding}}: مقدار عددی با تعداد یا نرخ اسپایک نمایش داده می‌شود:
+  \[
+  x=0.8,\quad T=4
+  \quad\Longrightarrow\quad
+  xT\approx3
+  \quad\Longrightarrow\quad
+  [1,1,1,0]
+  \]
+  ترتیب دقیق می‌تواند متفاوت باشد؛ تعداد اسپایک‌ها معنای اصلی را حمل می‌کند.
+\end{itemize}
+
+\subsection{کدگذاری مبتنی بر \eng{Integration}}
+
+\begin{itemize}
+  \item مقدار پیوسته در هر گام به پتانسیل اضافه می‌شود؛ با عبور از آستانه، اسپایک تولید و آستانه از پتانسیل کم می‌شود.
+  \item برای \(x=0.8\) و \(\theta=1\):
+  \begin{enumerate}
+    \item \(0.8<1\): بدون اسپایک.
+    \item \(0.8+0.8=1.6\): اسپایک؛ باقی‌مانده \(0.6\).
+    \item \(0.6+0.8=1.4\): اسپایک؛ باقی‌مانده \(0.4\).
+    \item \(0.4+0.8=1.2\): اسپایک.
+  \end{enumerate}
+  \[
+  \boxed{[0,1,1,1]}
+  \]
+  \item حداقل شرط کدگذاری معنادار: \key{رابطهٔ مستقیم مقدار پیوسته با نرخ اسپایک}.
+\end{itemize}
+
+\begin{trap}{مبادلهٔ اصلی}
+\[
+\mathrm{Energy/Cost}\quad\leftrightarrow\quad\mathrm{Accuracy}
+\]
+اسپایکی‌کردن داده می‌تواند بخشی از اطلاعات پیوسته را از بین ببرد؛ بنابراین \eng{SNN} معمولاً انرژی کمتری مصرف می‌کند، اما ممکن است دقت پایین‌تری از \eng{Transformer} معمولی داشته باشد.
+\end{trap}
+
+\subsection{هدف \eng{Attention} اسپایکی}
+
+\begin{itemize}
+  \item مانند توجه معمولی، بخش‌های مرتبط با توجه به زمینه به یکدیگر وزن بیشتری می‌دهند.
+  \item در متن، زمینهٔ «جنگل» باید بازنمایی «شیر» را به معنای حیوانی نزدیک کند؛ در تصویر نیز ناحیه‌های مرتبط برجسته می‌شوند.
+  \item در فضای اسپایکی، ارتباط بیشتر معمولاً با \key{نرخ یا هم‌وقوعی بیشتر اسپایک‌ها} نشان داده می‌شود.
+\end{itemize}
+
+\subsection{\eng{Query}، \eng{Key} و \eng{Value} اسپایکی}
+
+\begin{itemize}
+  \item سه ماتریس وزن جداگانه داریم:
+  \[
+  \boxed{W_Q,\qquad W_K,\qquad W_V}
+  \]
+  \item دنبالهٔ اسپایکی ورودی در این وزن‌ها ضرب می‌شود و \(Q\)، \(K\) و \(V\) اسپایکی ساخته می‌شوند.
+  \item وزن‌ها در آموزش با \eng{Surrogate Gradient} به‌روزرسانی می‌شوند.
+\end{itemize}
+
+\subsection{\eng{Attention} معمولی در برابر \eng{Spiking Attention}}
+
+\begin{itemize}
+  \item توجه کلاسیک:
+  \[
+  \boxed{\operatorname{softmax}\left(\frac{QK^T}{\sqrt d}\right)V}
+  \]
+  \eng{Softmax} نمره‌ها را به وزن‌هایی نرمال می‌کند که مجموعشان برابر یک است.
+  \item توجه اسپایکی:
+  \[
+  \boxed{QK^TV}
+  \]
+  ضرب اسپایک‌های دودویی خود نوعی هم‌فعالی یا شباهت می‌سازد؛ بنابراین \eng{Softmax} ضرورت و معنای قبلی را ندارد. مقیاس‌گذاری با \(\sqrt d\) همچنان می‌تواند باقی بماند.
+  \item حذف \eng{Softmax} اجازه می‌دهد ترتیب ضرب‌ها تغییر کند:
+  \[
+  \boxed{(QK^T)V=Q(K^TV)}
+  \]
+  ابتدا محاسبهٔ \(K^TV\) و سپس ضرب در \(Q\) می‌تواند پیچیدگی، حافظه و انرژی را کاهش دهد.
+\end{itemize}
+
+\subsection{معماری کلی \eng{SpikeFormer}}
+
+\begin{enumerate}
+  \item کدگذاری ورودی پیوسته به دنبالهٔ اسپایکی.
+  \item ورود به \term{توجه خودی اسپایکی}{Spiking Self-Attention; SSA}.
+  \item عبور خروجی توجه از بلوک \eng{MLP} اسپایکی.
+  \item استفاده از اتصال‌های \eng{Residual} اطراف بلوک توجه و \eng{MLP}.
+  \item تصمیم نهایی با سر طبقه‌بندی یا خروجی وظیفه.
+\end{enumerate}
+
+\subsection{نقش \eng{LIF} در \eng{SpikeFormer}}
+
+\begin{itemize}
+  \item پس از بسیاری از لایه‌های خطی، نورون \eng{LIF} قرار می‌گیرد.
+  \item وظایف \eng{LIF}: تجمع زمانی پتانسیل، نشت، مقایسه با آستانه، تولید اسپایک، ریست و دورهٔ تحریک‌ناپذیری.
+  \item \eng{MLP} معمولی:
+  \[
+  \mathrm{Linear}\rightarrow\mathrm{Activation}\rightarrow\mathrm{Linear}
+  \]
+  \item \eng{MLP} اسپایکی:
+  \[
+  \boxed{\mathrm{Linear}\rightarrow\mathrm{LIF}
+  \rightarrow\mathrm{Linear}\rightarrow\mathrm{LIF}}
+  \]
+  \item \eng{LIF} معادل دقیق تابع فعال‌ساز نیست، اما غیرخطی‌بودن ایجاد و خروجی را دوباره اسپایکی می‌کند.
+\end{itemize}
+
+\subsection{\eng{Residual Connection}}
+
+\begin{itemize}
+  \item اطلاعات قبلی را از مسیر میان‌بُر حفظ می‌کند.
+  \item به کاهش مشکل \eng{vanishing gradient} کمک می‌کند.
+  \item اگر یک بلوک بازنمایی مفیدی نسازد، بازنمایی قبلی کاملاً از بین نمی‌رود.
+\end{itemize}
+
+\section{بخش دوم: \eng{SpikeBERT} و تقطیر دانش}
+
+\subsection{چرا متن برای \eng{SNN} دشوارتر است؟}
+
+\begin{itemize}
+  \item \term{تراکم اطلاعات}{Information Density}: تغییر کوچک مانند افزودن «نـ» می‌تواند معنای جمله را معکوس کند؛ تصویر معمولاً افزونگی بیشتری دارد.
+  \item \term{وابستگی بلندمدت}{Long-Term Dependency}: معنای کلمه ممکن است به بخش‌های بسیار دور متن وابسته باشد، اما نشت \eng{LIF} نوعی فراموشی ایجاد می‌کند.
+  \item \term{ماهیت نمادین زبان}{Symbolic Nature}: توکن گسسته ابتدا به \eng{embedding} پیوسته و سپس دوباره به اسپایک تبدیل می‌شود؛ احتمال ازدست‌رفتن ظرافت معنایی افزایش می‌یابد.
+  \item \eng{SpikeFormer} و \eng{SpikeBERT} بیشتر \term{اثبات مفهوم}{Proof of Concept} هستند؛ امکان تبدیل معماری را نشان می‌دهند، اما هنوز چالش دقت و همگرایی دارند.
+\end{itemize}
+
+\subsection{\eng{Knowledge Distillation}}
+
+\begin{itemize}
+  \item آموزش \eng{SpikeBERT} فقط با برچسب نهایی به‌خوبی همگرا نمی‌شود؛ بنابراین خروجی‌های میانی نیز راهنمایی می‌شوند.
+  \item \textbf{\eng{Teacher}}: مدل \eng{BERT} معمولی، ازپیش‌آموزش‌دیده و دارای بازنمایی‌های پیوستهٔ زبانی.
+  \item \textbf{\eng{Student}}: مدل اسپایکی \eng{SpikeBERT}.
+  \item دانش از چهار مسیر منتقل می‌شود:
+  \begin{itemize}
+    \item \eng{Embedding Loss}
+    \item \eng{Hidden Feature Loss}
+    \item \eng{Logit Loss}
+    \item \eng{Cross Entropy Loss} نسبت به برچسب واقعی
+  \end{itemize}
+\end{itemize}
+
+\subsection{تبدیل \eng{Embedding} به اسپایک}
+
+\begin{itemize}
+  \item شکل ورودی پیوسته:
+  \[
+  \boxed{X\in\mathbb{R}^{N\times D}}
+  \]
+  \(N\): تعداد توکن‌ها؛ \(D\): تعداد ویژگی‌های هر توکن.
+  \item با افزودن \(T\) گام زمانی:
+  \[
+  \boxed{N\times D\quad\longrightarrow\quad T\times N\times D}
+  \]
+  \item مثال با \(T=5\)، مقدار \(0.3\) و آستانهٔ \(1\):
+  \[
+  0.3\rightarrow0.6\rightarrow0.9\rightarrow1.2
+  \rightarrow\text{\rl{اسپایک و ریست}}
+  \]
+\end{itemize}
+
+\subsection{بازگردانی و هم‌ترازسازی بازنمایی}
+
+\begin{enumerate}
+  \item دریافت \eng{embedding} اولیه از \eng{BERT}.
+  \item تبدیل مقدار پیوسته به اسپایک.
+  \item پردازش در \eng{SpikeBERT}.
+  \item تبدیل تعداد یا نرخ اسپایک به مقدار پیوسته.
+  \item نگاشت خروجی \eng{Student} به فضای \eng{Teacher}.
+  \item مقایسه و محاسبهٔ خطا.
+\end{enumerate}
+
+\begin{formula}{Projection}
+\[
+\boxed{H'=HW+b}
+\qquad\text{\rl{یا}}\qquad
+\boxed{H'=\mathrm{MLP}(H)}
+\]
+\eng{MLP} نسبت به یک لایهٔ خطی ساده، نگاشت قوی‌تری برای هم‌ترازکردن فضای دو مدل می‌سازد.
+\end{formula}
+
+\subsection{\eng{Feature Loss} و \eng{Embedding Loss}}
+
+\begin{itemize}
+  \item خروجی‌های متناظر \eng{Teacher} و \eng{Student} پس از \eng{projection} خانه‌به‌خانه مقایسه می‌شوند.
+  \item مثال:
+  \[
+  H_T=[1,2,0],\qquad H_S=[0.5,0.3,1]
+  \]
+  \[
+  \boxed{L=(1-0.5)^2+(2-0.3)^2+(0-1)^2}
+  \]
+  \item لازم نیست همهٔ لایه‌ها هم‌تراز شوند؛ انتخاب لایه‌های مقایسه‌شونده بخشی از طراحی مدل است.
+\end{itemize}
+
+\subsection{دو مرحلهٔ آموزش \eng{SpikeBERT}}
+
+\begin{itemize}
+  \item \textbf{مرحلهٔ اول ـ انتقال دانش عمومی:}
+  \begin{itemize}
+    \item نزدیک‌کردن \eng{embedding}ها و ویژگی‌های میانی \eng{Student} به \eng{Teacher}.
+    \item تمرکز اصلی روی \eng{Embedding Loss} و \eng{Hidden Feature Loss}.
+  \end{itemize}
+  \item \textbf{مرحلهٔ دوم ـ آموزش مخصوص وظیفه:}
+  \begin{itemize}
+    \item تنظیم مدل برای وظیفه‌ای مانند تحلیل احساسات.
+    \item مقایسهٔ \eng{logit}های دو مدل و خروجی \eng{Student} با برچسب واقعی.
+  \end{itemize}
+\end{itemize}
+
+\subsection{\eng{Logit Loss} و \eng{Cross Entropy}}
+
+\begin{itemize}
+  \item مثال خطای لاجیت:
+  \[
+  z_T=[0.2,0.1],\qquad z_S=[0.5,0]
+  \]
+  \[
+  \boxed{L_{\mathrm{logit}}=(0.2-0.5)^2+(0.1-0)^2}
+  \]
+  \item خطای آنتروپی متقاطع برای کلاس درست \(y\):
+  \[
+  \boxed{
+  L_{\mathrm{CE}}=
+  -\log\left(\frac{e^{z_y}}{\sum_j e^{z_j}}\right)}
+  \]
+  \(z_y\): لاجیت کلاس صحیح؛ مخرج: مجموع نمایی لاجیت همهٔ کلاس‌ها.
+\end{itemize}
+
+\subsection{تابع زیان نهایی و آموزش}
+
+\begin{formula}{زیان ترکیبی SpikeBERT}
+\[
+\boxed{
+\begin{aligned}
+L_{\mathrm{total}}={}&
+\lambda_1L_{\mathrm{embedding}}
++\lambda_2L_{\mathrm{feature}}\\
+&+\lambda_3L_{\mathrm{logit}}
++\lambda_4L_{\mathrm{CE}}
+\end{aligned}}
+\]
+\begin{itemize}
+  \item \(\lambda_i\): وزن اهمیت هر مؤلفهٔ خطا.
+  \item پس‌انتشار بر اساس \(L_{\mathrm{total}}\) انجام و برای عبور گرادیان از اسپایک‌ها از \eng{Surrogate Gradient} استفاده می‌شود.
+  \item حتی \eng{embedding} اولیهٔ \eng{SpikeBERT} نیز در آموزش \eng{fine-tune} می‌شود.
+\end{itemize}
+\end{formula}
+
+\subsection{نقش \eng{Time Step}}
+
+\begin{itemize}
+  \item \(T\) یک ابرپارامتر ویژهٔ شبکهٔ اسپایکی و تعداد گام‌های زمانی کدگذاری است:
+  \[
+  \boxed{T=\mathrm{Time\ Step}}
+  \]
+  \item افزایش \(T\) مانند \term{تجمع شواهد}{Evidence Accumulation} است؛ شواهد بیشتری برای عبور از آستانه و تصمیم‌گیری فراهم می‌شود.
+  \item رابطهٔ دقت تا نقطه‌ای صعودی و سپس اشباعی است:
+  \[
+  \boxed{T\uparrow\quad\Longrightarrow\quad
+  \mathrm{Accuracy}\uparrow\quad\text{\rl{تا نقطهٔ اشباع}}}
+  \]
+  \item هدف: یافتن کمترین \(T\) که بهترین دقت عملی یا \eng{temporal resolution} مناسب را ایجاد کند.
+  \item مشکلات \(T\) بسیار بزرگ:
+  \begin{itemize}
+    \item پایان اطلاعات مفید و حساسیت بیشتر به نویز؛
+    \item افزایش بار حافظه و ارتباط با محدودیت حافظهٔ فعال؛
+    \item کندترشدن همگرایی، آموزش و \eng{inference}؛
+    \item هزینهٔ بیشتر در برابر بهبود اندک، ثابت‌ماندن یا حتی افت دقت.
+  \end{itemize}
+\end{itemize}
+
+\subsection{مثال \eng{Attention} اسپایکی: شیر و جنگل}
+
+\begin{itemize}
+  \item با فرض \(Q=K=V=X\)، امتیاز «شیر به شیر» برابر \(4\) و «شیر به جنگل» برابر \(2\) است.
+  \[
+  4+2=6,\qquad
+  A_{\text{\rl{شیر، شیر}}}=\frac{4}{6}=\frac23,\qquad
+  A_{\text{\rl{شیر، جنگل}}}=\frac{2}{6}=\frac13
+  \]
+  \item بازنمایی جدید:
+  \[
+  \boxed{
+  V'_{\text{\rl{شیر}}}
+  =\frac23V_{\text{\rl{شیر}}}
+  +\frac13V_{\text{\rl{جنگل}}}}
+  \]
+  زمینهٔ «جنگل» باید بُعد حیوانی «شیر» را تقویت و بُعد مایع را تضعیف کند.
+\end{itemize}
+
+\begin{trap}{جمع‌بندی مقایسه‌ای}
+\begin{itemize}
+  \item \textbf{\eng{SpikeFormer}:} تمرکز بر معماری \eng{Transformer} اسپایکی، کدگذاری، توجه بدون \eng{Softmax} و \eng{MLP} مبتنی بر \eng{LIF}.
+  \item \textbf{\eng{SpikeBERT}:} انتقال همین ایده به زبان با کمک \eng{Teacher--Student} و چند زیان میانی و نهایی.
+  \item \textbf{مبادلهٔ مشترک:} کاهش انرژی و پیچیدگی در برابر خطر افت دقت و ازدست‌رفتن اطلاعات پیوسته.
+\end{itemize}
+\end{trap}
+
+\section{بخش سوم: \eng{SpikeGPT}، \eng{RWKV} و تولید متن اسپایکی}
+
+\subsection{طبقه‌بندی در برابر تولید}
+
+\begin{itemize}
+  \item \term{طبقه‌بندی}{Classification}:
+  \begin{itemize}
+    \item \eng{BERT} دوطرفه و \eng{encoder-only} است؛ برای تصمیم نهایی کل متن را از دو جهت می‌بیند.
+    \item \eng{hidden state}ها می‌توانند \eng{average pooling} شوند و سپس به سر طبقه‌بندی برسند.
+  \end{itemize}
+  \item \term{تولید}{Generation}:
+  \begin{itemize}
+    \item \eng{GPT} علّی، خودرگرسیو و \eng{decoder-only} است.
+    \item با \eng{masked self-attention} فقط گذشته را می‌بیند و توکن بعدی را پیش‌بینی می‌کند.
+    \item در آموزش، هدف‌ها یک موقعیت شیفت می‌یابند:
+    \[
+    [x_1,x_2,\ldots,x_{s-1}]
+    \longrightarrow
+    [x_2,x_3,\ldots,x_s]
+    \]
+    \item خروجی به واژگان متصل و معمولاً با \eng{Cross Entropy} آموزش داده می‌شود.
+  \end{itemize}
+\end{itemize}
+
+\subsection{چرا \eng{SpikeGPT} از \eng{RWKV} استفاده می‌کند؟}
+
+\begin{itemize}
+  \item تبدیل مستقیم \eng{Transformer} به مدل اسپایکی برای تولید متن معمولاً کافی و کارآمد نیست.
+  \item توجه کامل همهٔ توکن‌ها را دوبه‌دو مقایسه می‌کند و پیچیدگی تقریبی دارد:
+  \[
+  \boxed{O(n^2)}
+  \]
+  \item \eng{RNN} گذشته را در یک \eng{state} خلاصه می‌کند، اما غیرخطی‌بودن‌هایی مانند \(\tanh\) روی حالت، فراموشی و \eng{vanishing gradient} ایجاد می‌کنند.
+  \item \textbf{\eng{RWKV}}: ترکیب حالت بازگشتی \eng{RNN} با مزایای \eng{Transformer}؛ حالت خطی‌تر است و گذشته بدون توجه دوبه‌دوی کامل خلاصه می‌شود.
+\end{itemize}
+
+\subsection{چهار جزء \eng{RWKV}}
+
+\begin{itemize}
+  \item \term{\eng{Receptance}}{R}: گیت خروجی؛ تعیین می‌کند چه مقدار از \eng{state} عبور کند.
+  \item \term{\eng{Weight}}{W}: عامل فراموشی؛ مقدار حفظ یا کاهش اطلاعات قبلی.
+  \item \term{\eng{Key}}{K}: اهمیت توکن فعلی.
+  \item \term{\eng{Value}}{V}: محتوای توکن فعلی.
+  \item در \eng{RWKV}، \eng{Query} حذف می‌شود؛ گذشته در یک \eng{state} جمع شده است.
+\end{itemize}
+
+\begin{formula}{خروجی \eng{RWKV}}
+\[
+\boxed{\mathrm{Output}=R\times\mathrm{State}}
+\]
+\end{formula}
+
+\subsection{مثال عددی به‌روزرسانی \eng{State}}
+
+\begin{enumerate}
+  \item توکن اول:
+  \[
+  K_1=2,\quad V_1=10,\quad
+  \mathrm{State}_1=\frac{K_1V_1}{K_1}=\frac{20}{2}=10
+  \]
+  \item توکن دوم و عامل فراموشی:
+  \[
+  K_2=3,\quad V_2=4,\quad R_2=0.9,\quad W=0.5
+  \]
+  \item صورت و مخرج جدید:
+  \[
+  0.5(20)+3(4)=22,\qquad 0.5(2)+3=4
+  \]
+  \item حالت و خروجی:
+  \[
+  \boxed{\mathrm{State}_2=\frac{22}{4}=5.5}
+  \qquad
+  \boxed{\mathrm{Output}=0.9(5.5)=4.95}
+  \]
+\end{enumerate}
+
+\begin{trap}{دو معنای متفاوت زمان}
+\begin{itemize}
+  \item \(t\) در \eng{RWKV}: موقعیت توکن در دنبالهٔ زبانی.
+  \item \(T\) در \eng{SNN}: تعداد گام‌های زمانی برای کدگذاری اسپایکی هر نمایش.
+\end{itemize}
+\eng{SpikeGPT} هم‌زمان با زمان ترتیبی زبان و زمان اسپایکی سروکار دارد.
+\end{trap}
+
+\subsection{روند معماری \eng{SpikeGPT}}
+
+\begin{enumerate}
+  \item تبدیل \eng{embedding} ورودی به نمایش باینری یا اسپایکی با \eng{LIF}.
+  \item ورود دادهٔ اسپایکی به بلوک \eng{RWKV}.
+  \item اسپایکی‌کردن دوبارهٔ خروجی \eng{RWKV}.
+  \item ورود به بخش فیدفوروارد اصلاح‌شده یا \eng{R-FFN}.
+  \item اسپایکی‌کردن دوبارهٔ خروجی \eng{R-FFN}.
+  \item استفاده از خروجی برای تولید متن یا طبقه‌بندی.
+\end{enumerate}
+
+\subsection{\eng{Time-Mix} و \eng{Channel-Mix}}
+
+\begin{itemize}
+  \item \term{\eng{Time-Mix}}{RWKV}: اطلاعات توکن‌های قبلی و توکن فعلی را ترکیب می‌کند؛ معادل نقش فهم زمینه در \eng{Attention}.
+  \item \term{\eng{Channel-Mix}}{R-FFN}: روی ویژگی‌ها و کانال‌های توکن فعلی کار می‌کند؛ معادل نقش \eng{MLP} یا \eng{feed-forward}.
+  \item در \eng{R-FFN}، بُعد نمایش ابتدا بزرگ، سپس از \eng{ReLU} عبور و دوباره فشرده می‌شود؛ مسیر گیت با محتوای اصلی عنصر‌به‌عنصر ترکیب می‌شود.
+\end{itemize}
+
+\begin{formula}{ضرب هادامارد در \eng{R-FFN}}
+\[
+\boxed{
+[a_1,a_2,a_3]\odot[b_1,b_2,b_3]
+=[a_1b_1,a_2b_2,a_3b_3]}
+\]
+\end{formula}
+
+\subsection{پیوستگی میانی، تنکی و مصرف انرژی}
+
+\begin{itemize}
+  \item لازم نیست همهٔ نقاط \eng{SNN} صفر و یک باشند؛ مقدارهای پیوستهٔ میانی عمدتاً پتانسیل غشا هستند.
+  \item خروجی لایه‌های اسپایکی بسیار \term{تنک}{Sparse} است؛ فقط رخدادهای فعال محاسبه ایجاد می‌کنند.
+  \item \eng{GPU} برای عملیات متراکم طراحی شده است؛ مزیت واقعی \eng{SNN} روی سخت‌افزار نورومورفیک آشکارتر می‌شود.
+  \item عملیات شبکهٔ غیر اسپایکی:
+  \[
+  \boxed{\mathrm{MAC}=\mathrm{Multiply}+\mathrm{Accumulate}}
+  \]
+  \item با ورودی صفر و یک در شبکهٔ اسپایکی، بسیاری از ضرب‌ها حذف می‌شوند:
+  \[
+  \boxed{\mathrm{AC}=\mathrm{Accumulate}}
+  \]
+  \item برآورد مقالهٔ \eng{SpikeGPT}: کاهش انرژی تقریبی \key{۳۲ برابری} نسبت به \eng{Vanilla GPT}.
+\end{itemize}
+
+\begin{trap}{جمع‌بندی فصل}
+\begin{itemize}
+  \item \textbf{\eng{SpikeFormer}}: توجه اسپایکی کم‌هزینه‌تر برای معماری‌های عمیق.
+  \item \textbf{\eng{SpikeBERT}}: حل دشواری متن با تقطیر دانش از \eng{BERT}.
+  \item \textbf{\eng{SpikeGPT}}: تولید خودرگرسیو با \eng{RWKV}، \eng{Time-Mix} و \eng{R-FFN} به‌جای توجه کامل.
+\end{itemize}
+\end{trap}
+
+\end{document}

@@ -29,3 +29,12 @@
 
 - [نسخه PDF جزوه](booklet/computational_cognitive_science_booklet.pdf)
 - [سورس LaTeX جزوه](booklet/computational_cognitive_science_booklet.tex)
+
+## خلاصه‌های امتحانی
+
+خلاصه‌های فارسی و ساختاریافتهٔ فصل‌ها شامل مفاهیم کلیدی، مقایسه‌ها، فهرست‌ها و فرمول‌های مهم:
+
+- فصل ۵ — پاداش، یادگیری تقویتی و تصمیم‌گیری: [PDF](summaries/chapter-05-summary.pdf) | [LaTeX](summaries/chapter-05-summary.tex)
+- فصل ۶ — شبکه‌های اسپایکی و محاسبات نورومورفیک: [PDF](summaries/chapter-06-summary.pdf) | [LaTeX](summaries/chapter-06-summary.tex)
+- فصل ۷ — مدل‌های اسپایکی مدرن: [PDF](summaries/chapter-07-summary.pdf) | [LaTeX](summaries/chapter-07-summary.tex)
+- فصل ۸ — هم‌ترازی مغز، کدگذاری عصبی و استدلال: [PDF](summaries/chapter-08-summary.pdf) | [LaTeX](summaries/chapter-08-summary.tex)

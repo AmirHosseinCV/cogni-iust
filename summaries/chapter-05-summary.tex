@@ -1,0 +1,436 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,top=18mm,bottom=19mm,right=19mm,left=19mm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage[explicit]{titlesec}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage[colorlinks=true,linkcolor=blue!45!black]{hyperref}
+\usepackage{xepersian}
+
+\settextfont[
+  Path={../booklet/font/},
+  UprightFont={IRLotusICEE.ttf},
+  BoldFont={IRLotusICEE_Bold.ttf},
+  BoldItalicFont={IRLotusICEE_BoldIranic.ttf},
+  ItalicFont={IRLotusICEE_Iranic.ttf},
+  FontFace={b}{n}{IRLotusICEE_Bold.ttf},
+  FontFace={bx}{n}{IRLotusICEE_Bold.ttf},
+  FontFace={b}{it}{IRLotusICEE_BoldIranic.ttf},
+  FontFace={bx}{it}{IRLotusICEE_BoldIranic.ttf},
+  FontFace={m}{sl}{IRLotusICEE_Iranic.ttf},
+  Scale=1.15
+]{IRLotusICEE.ttf}
+\setlatintextfont[
+  Path={../booklet/font/},
+  BoldFont={LiberationSerif-Bold.ttf},
+  BoldItalicFont={LiberationSerif-BoldItalic.ttf},
+  ItalicFont={LiberationSerif-Italic.ttf}
+]{LiberationSerif-Regular.ttf}
+\setdigitfont[Path={../booklet/font/},Scale=1.15]{IRLotusICEE.ttf}
+\defpersianfont\titlefont[Path={../booklet/font/},Scale=1]{IRTitr.ttf}
+
+\definecolor{navy}{RGB}{20,65,105}
+\definecolor{blueback}{RGB}{237,245,252}
+\definecolor{greenback}{RGB}{238,248,241}
+\definecolor{yellowback}{RGB}{255,248,225}
+\definecolor{redback}{RGB}{254,239,239}
+
+\newcommand{\eng}[1]{\lr{#1}}
+\newcommand{\term}[2]{\textbf{#1} \eng{(#2)}}
+\newcommand{\key}[1]{\textcolor{navy}{\textbf{#1}}}
+\newcommand{\RPE}{\mathrm{RPE}}
+
+\newtcolorbox{recall}[1]{
+  enhanced,breakable,colback=blueback,colframe=navy,title={#1},
+  fonttitle=\bfseries,boxrule=.6pt,arc=1.5mm,
+  right=3.5mm,left=3.5mm,top=2mm,bottom=2mm,
+  before skip=7pt,after skip=7pt,
+  boxed title style={left=2mm,right=2mm,top=.7mm,bottom=.7mm}
+}
+\newtcolorbox{formula}[1]{
+  enhanced,breakable,colback=greenback,colframe=green!45!black,title={#1},
+  fonttitle=\bfseries,boxrule=.6pt,arc=1.5mm,
+  right=3.5mm,left=3.5mm,top=2mm,bottom=2mm,
+  before skip=7pt,after skip=7pt,
+  boxed title style={left=2mm,right=2mm,top=.7mm,bottom=.7mm}
+}
+\newtcolorbox{trap}[1]{
+  enhanced,breakable,colback=yellowback,colframe=orange!65!black,title={#1},
+  fonttitle=\bfseries,boxrule=.6pt,arc=1.5mm,
+  right=3.5mm,left=3.5mm,top=2mm,bottom=2mm,
+  before skip=7pt,after skip=7pt
+}
+
+\setlist[itemize,1]{
+  label=\textcolor{navy}{\large\textbullet},
+  rightmargin=7mm,leftmargin=2mm,topsep=4pt,itemsep=3.5pt,parsep=1pt
+}
+\setlist[itemize,2]{
+  label=\textcolor{navy}{--},
+  rightmargin=7mm,leftmargin=2mm,topsep=2pt,itemsep=2.5pt,parsep=0pt
+}
+\setlist[enumerate]{
+  label=\textcolor{navy}{\arabic*.},
+  rightmargin=9mm,leftmargin=2mm,topsep=4pt,itemsep=3pt
+}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+\setlength{\fboxsep}{5pt}
+\linespread{1.12}
+\renewcommand{\arraystretch}{1.25}
+
+\titleformat{\section}[block]
+  {\normalfont\titlefont\Large\color{white}}
+  {}
+  {0pt}
+  {\colorbox{navy}{\parbox{\dimexpr\textwidth-2\fboxsep\relax}{\raggedleft\strut#1\strut}}}
+\titlespacing*{\section}{0pt}{13pt}{10pt}
+
+\titleformat{\subsection}[hang]
+  {\normalfont\bfseries\large\color{navy}}
+  {\thesubsection}
+  {7pt}
+  {#1}
+  [\vspace{2pt}\color{navy!35}\titlerule]
+\titlespacing*{\subsection}{0pt}{11pt}{7pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\small مرور فصل ۵: پاداش، یادگیری تقویتی و تصمیم‌گیری}
+\fancyhead[L]{\small علوم شناختی محاسباتی}
+\fancyfoot[C]{\thepage}
+\setlength{\headheight}{14pt}
+
+\begin{document}
+
+\begin{center}
+  {\titlefont\LARGE خلاصهٔ امتحانی فصل ۵}\\[3pt]
+  {\Large پاداش، یادگیری تقویتی و تصمیم‌گیری}\\[3pt]
+  {\small مرور تفکیک‌شدهٔ مفاهیم، فهرست‌ها و فرمول‌ها}
+\end{center}
+
+\section{بخش اول: سیستم پاداش و یادگیری تقویتی}
+
+\subsection{مفاهیم پایهٔ تعامل با محیط}
+
+\begin{itemize}
+  \item \term{عامل}{Agent}، \term{وضعیت}{State}، \term{عمل}{Action} و \term{گذار}{Transition}:
+  عامل در یک وضعیت قرار دارد، عملی انجام می‌دهد و از طریق گذار به وضعیت بعدی می‌رود:
+  \[
+  S\xrightarrow{A}S'
+  \]
+
+  \item \term{تقویت‌کننده}{Reinforcer}: پاداش یا تنبیهی که باعث یادگیری، تکرار یا کاهش یک رفتار می‌شود.
+
+  \item \term{ماژول ارزش‌گذاری}{Utility Module}: کیفیت عمل انجام‌شده را بررسی می‌کند تا مدل قبلی یا \eng{Prior Model} به‌روزرسانی شود.
+\end{itemize}
+
+\subsection{مراحل معماری شناختی در مواجهه با محرک}
+
+\begin{enumerate}
+  \item دریافت محرک‌های حسی از طریق ماژول‌های بینایی یا شنیداری.
+  \item انتخاب بخشی از اطلاعات محیط با فرایند توجه انتخابی.
+  \item ورود اطلاعات فعلی به حافظهٔ کوتاه‌مدت.
+  \item بازیابی اطلاعات مرتبط از حافظهٔ بلندمدت.
+  \item ترکیب اطلاعات فعلی و دانش قبلی برای استخراج الگو.
+  \item انتخاب عمل و اجرای آن از مسیر ماژول حرکتی.
+  \item دریافت پاداش یا تنبیه در وضعیت بعدی و اصلاح مدل قبلی.
+\end{enumerate}
+
+\subsection{پاداش در مغز و دوپامین}
+
+\begin{itemize}
+  \item \term{دوپامین}{Dopamine}: در واکنش به یک تغییر حالت معنادار و مهم ترشح می‌شود؛ بنابراین صرفاً نشانهٔ «لذت» نیست.
+
+  \item هر تجربهٔ خوب الزاماً دوپامین زیادی ایجاد نمی‌کند؛ اگر تجربه کاملاً قابل پیش‌بینی باشد، غافلگیری و پاسخ دوپامینی کمتر است.
+
+  \item \term{ناحیهٔ تگمنتوم شکمی}{Ventral Tegmental Area; VTA}: ناحیهٔ مهم تولید دوپامین و محاسبهٔ خطای پیش‌بینی پاداش.
+\end{itemize}
+
+\subsection{مسیرهای دوپامینرژیک مرتبط با \eng{VTA}}
+
+\[
+\boxed{
+\text{\lr{VTA}}\rightarrow
+\begin{cases}
+\text{\lr{Mesolimbic Pathway}}\\
+\text{\lr{Mesocortical Pathway}}
+\end{cases}}
+\]
+
+\begin{itemize}
+  \item \term{مسیر مزولیمبیک}{Mesolimbic Pathway}:
+  \begin{itemize}
+    \item مسیر: \eng{VTA} به سیستم لیمبیک، به‌ویژه \eng{Nucleus Accumbens}.
+    \item مسئول احساس رضایت، شرطی‌شدن، تقویت رفتار، اعتیاد و میل به تکرار رفتار.
+    \item ارزش محرک یا عمل را در حافظهٔ بلندمدت تقویت یا تضعیف می‌کند.
+    \item استعاره: \key{گاز}؛ «این رفتار قبلاً خوب بوده است، دوباره انجامش بده.»
+  \end{itemize}
+
+  \item \term{مسیر مزوکورتیکال}{Mesocortical Pathway}:
+  \begin{itemize}
+    \item مسیر: \eng{VTA} به قشر پیش‌پیشانی یا \eng{Prefrontal Cortex}.
+    \item مسئول تصمیم‌گیری، تحلیل، کنترل رفتار و ارزیابی پیامدهای بلندمدت.
+    \item پاداش فوری را در برابر هزینه و نتیجهٔ آینده بررسی می‌کند.
+    \item استعاره: \key{ترمز یا تحلیل‌گر}.
+  \end{itemize}
+\end{itemize}
+
+\subsection{اختلال‌ها و پدیده‌های مرتبط با سیستم پاداش}
+
+\begin{itemize}
+  \item \textbf{پیری:}
+  \begin{itemize}
+    \item تجربهٔ بیشتر \(\Leftarrow\) پیش‌بینی‌پذیری بیشتر محرک‌ها.
+    \item نزدیک‌شدن خطای پیش‌بینی به صفر و کاهش ترشح دوپامین.
+    \item کاهش به‌روزرسانی مدل و میل به تجربهٔ چیزهای تازه یا \eng{Exploration}.
+    \item تجربه‌های تازه و کمتر تجربه‌شده می‌توانند غافلگیری سالم ایجاد کنند.
+  \end{itemize}
+
+  \item \textbf{افسردگی:}
+  \begin{itemize}
+    \item سیستم پاداش به‌درستی فعال نمی‌شود و کارهای قبلاً لذت‌بخش جذابیت خود را از دست می‌دهند.
+    \item فرد ممکن است با عمل‌نکردن و تجربه‌نکردن در حالت قطعیت باقی بماند.
+    \item خطای نزدیک صفر در این حالت ناسالم است؛ زیرا از تجربه و دقیق‌ترشدن مدل حاصل نشده است.
+  \end{itemize}
+
+  \item \textbf{اعتیاد:}
+  \begin{itemize}
+    \item تجربهٔ اولیه می‌تواند خطای پیش‌بینی مثبت ایجاد کند:
+    \[
+    \RPE>0
+    \]
+    \item با تکرار و سازگاری مغز، تجربه عادی می‌شود:
+    \[
+    \RPE\rightarrow0
+    \]
+    \item فرد برای ایجاد غافلگیری مثبت دوباره، دوز را افزایش می‌دهد.
+    \item مغز در واکنش دفاعی، حساسیت به دوپامین را کاهش می‌دهد؛ در نتیجه لذت از محرک اعتیادآور و محرک‌های عادی کمتر می‌شود.
+    \item مقاومت در برابر این چرخه به میزان مواجهه، آگاهی، محیط، ژنتیک و قدرت مسیر مزوکورتیکال بستگی دارد.
+    \item \eng{Marshmallow Test}: نمونه‌ای از خودکنترلی، تأخیر پاداش و توجه به نتیجهٔ بلندمدت.
+  \end{itemize}
+\end{itemize}
+
+\begin{formula}{چرخهٔ اعتیاد}
+\[
+\text{تجربهٔ قوی}\rightarrow\RPE>0
+\rightarrow\text{سازگاری}\rightarrow\RPE\approx0
+\rightarrow\text{افزایش دوز}\rightarrow\RPE>0\rightarrow\cdots
+\]
+\end{formula}
+
+\subsection{کدگذاری پیش‌بینانه}
+
+\begin{itemize}
+  \item \term{کدگذاری پیش‌بینانه}{Predictive Coding}: مقایسهٔ مداوم میان دانش قبلی یا \eng{Prior Knowledge} و واقعیت مشاهده‌شده.
+  \item مبنای یادگیری، خود واقعیت خام نیست؛ بلکه \key{خطای میان پیش‌بینی و واقعیت} است.
+  \item در سیستم پاداش نیز انتظار قبلی با پاداش واقعی مقایسه می‌شود.
+\end{itemize}
+
+\subsection{خطای پیش‌بینی پاداش}
+
+\begin{formula}{Reward Prediction Error}
+\[
+\text{\lr{Reward Prediction Error}}
+=\text{\lr{Actual Reward}}-\text{\lr{Predicted Reward}}
+\]
+\[
+\boxed{\RPE=R_{\mathrm{actual}}-R_{\mathrm{predicted}}}
+\]
+\end{formula}
+
+\begin{itemize}
+  \item \(\RPE>0\): نتیجه بهتر از انتظار؛ غافلگیری مثبت و تقویت عمل یا محرک.
+  \item \(\RPE=0\): نتیجه مطابق انتظار؛ اطلاعات تازه‌ای برای تغییر مدل وجود ندارد.
+  \item \(\RPE<0\): نتیجه بدتر از انتظار؛ ارزش عمل یا محرک کاهش می‌یابد.
+\end{itemize}
+
+\subsection{اصل انرژی آزاد}
+
+\begin{itemize}
+  \item \term{اصل انرژی آزاد}{Free Energy Principle}: سیستم شناختی برای کاهش عدم قطعیت، غافلگیری و خطای پیش‌بینی محیط را تجربه می‌کند.
+  \item هدف، هماهنگ‌شدن مدل ذهنی با واقعیت است:
+  \[
+  \boxed{\RPE\rightarrow0}
+  \]
+  \item صفرشدن سالم خطا حاصل تجربه و اصلاح مدل است؛ نه عمل‌نکردن و تجربه‌نکردن.
+\end{itemize}
+
+\section{بخش دوم: مدل‌های محاسباتی یادگیری تقویتی}
+
+\subsection{یادگیری تقویتی و ویژگی‌های آن}
+
+\begin{itemize}
+  \item \term{یادگیری تقویتی}{Reinforcement Learning}: یادگیری از طریق تعامل فعال با محیط، انجام عمل و دریافت پاداش یا تنبیه.
+  \item یادگیری معمولاً \term{برخط}{Online} و نمونه‌به‌نمونه است؛ عامل از ابتدا مدل دقیق محیط را ندارد.
+  \item \textbf{در برابر یادگیری نظارت‌شده:} برچسب درست یا \eng{Label} آماده وجود ندارد.
+  \item \textbf{در برابر یادگیری بدون‌ناظر:} هدف فقط کشف ساختار داده نیست؛ عمل و بازخورد پاداش بخش اصلی مسئله‌اند.
+\end{itemize}
+
+\subsection{محیط قطعی و تصادفی}
+
+\begin{itemize}
+  \item \term{محیط قطعی}{Deterministic}: یک عمل مشخص در یک وضعیت مشخص، همیشه به نتیجهٔ یکسان می‌رسد.
+  \item \term{محیط تصادفی}{Stochastic}: انجام یک عمل مشخص لزوماً به یک نتیجهٔ قطعی ختم نمی‌شود و گذار با احتمال همراه است:
+  \[
+  S\xrightarrow{A}S'
+  \]
+  \item عامل باید با تجربه، دریافت بازخورد و اصلاح تدریجی مدل گذار با این عدم قطعیت کنار بیاید.
+\end{itemize}
+
+\subsection{یادگیری تفاوت زمانی}
+
+\begin{itemize}
+  \item \term{یادگیری تفاوت زمانی}{Temporal Difference Learning}: اختلاف میان ارزش پیش‌بینی‌شده در زمان \(t\) و نمونهٔ حاصل از تجربه در زمان \(t+1\) را یاد می‌گیرد.
+  \item \term{نرخ یادگیری}{Learning Rate} با \(\alpha\) نشان داده می‌شود:
+  \[
+  \boxed{0\leq\alpha\leq1}
+  \]
+  \item \(\alpha=0\): تجربهٔ جدید اثری ندارد و یادگیری رخ نمی‌دهد.
+  \item \(\alpha=1\): فقط تجربهٔ جدید مهم است و دانش قبلی نادیده گرفته می‌شود.
+  \item \(0<\alpha<1\): درون‌یابی میان دانش قبلی و تجربهٔ جدید.
+\end{itemize}
+
+\begin{formula}{فرمول به‌روزرسانی TD}
+\[
+\boxed{V_{t+1}=V_t+\alpha(\text{\lr{Sample}}-V_t)}
+\]
+\[
+\text{\lr{Sample}}-V_t=\RPE
+\]
+\[
+\boxed{V_{t+1}=V_t+\alpha\times\RPE}
+\]
+\end{formula}
+
+\begin{itemize}
+  \item هدف نهایی:
+  \[
+  \text{\lr{Sample}}=V_t
+  \quad\Longrightarrow\quad
+  \RPE=0
+  \]
+\end{itemize}
+
+\subsection{ضریب تخفیف}
+
+\begin{itemize}
+  \item \term{ضریب تخفیف}{Discount Factor} با \(\gamma\) نشان داده می‌شود و میزان اهمیت پاداش‌های آینده را مدل می‌کند:
+  \[
+  \boxed{0\leq\gamma\leq1}
+  \]
+  \item \(\gamma=0\): فقط پاداش فوری؛ تصمیم‌گیری کاملاً کوتاه‌نگر.
+  \item \(\gamma=1\): پاداش‌های آینده بدون تخفیف در نظر گرفته می‌شوند.
+  \item \(0<\gamma<1\): آینده مهم است، اما پاداش‌های دورتر اثر کمتری دارند.
+\end{itemize}
+
+\begin{formula}{مجموع پاداش‌ها با ضریب تخفیف}
+\[
+\boxed{
+r_t+\gamma r_{t+1}+\gamma^2r_{t+2}
++\gamma^3r_{t+3}+\cdots}
+\]
+\end{formula}
+
+\begin{itemize}
+  \item ارتباط زیستی مطرح‌شده: سروتونین بالاتر ممکن است با عجلهٔ کمتر و توان بیشتر برای درنظرگرفتن پاداش آینده مرتبط باشد؛ البته رفتار به عوامل متعدد وابسته است.
+\end{itemize}
+
+\subsection{تابع ارزش}
+
+\begin{itemize}
+  \item \term{تابع ارزش}{Value Function}: ارزش قرارداشتن در حالت \(s\) را با \(V(s)\) نشان می‌دهد.
+  \item در هر گام، ارزش همان حالتی به‌روزرسانی می‌شود که عامل از آن حرکت کرده است.
+\end{itemize}
+
+\begin{formula}{فرمول کامل به‌روزرسانی تابع ارزش}
+\[
+\boxed{
+V_{t+1}(s)=(1-\alpha)V_t(s)
++\alpha\left[r+\gamma V_t(s')\right]}
+\]
+\begin{itemize}
+  \item \(V_t(s)\): ارزش قبلی حالت فعلی.
+  \item \(r\): پاداش دریافت‌شده.
+  \item \(V_t(s')\): ارزش حالت بعدی.
+  \item \((1-\alpha)V_t(s)\): سهم دانش قبلی.
+  \item \(\alpha[r+\gamma V_t(s')]\): سهم تجربهٔ جدید.
+\end{itemize}
+\end{formula}
+
+\subsection{تابع \eng{Q}}
+
+\begin{itemize}
+  \item \term{تابع Q}{Q Function}: ارزش انجام عمل خاص \(a\) در حالت خاص \(s\).
+  \item \textbf{تفاوت اصلی:} \(V(s)\) ارزش خود حالت است؛ \(Q(s,a)\) ارزش یک عمل در آن حالت.
+  \item رابطهٔ میان \(V\) و \(Q\):
+  \[
+  \boxed{V(s)=\max_a Q(s,a)}
+  \]
+  \item \term{تابع احتمال گذار}{Transition Function} با \(T(s,a,s')\) نشان داده می‌شود: احتمال رسیدن از \(s\) به \(s'\) با انجام \(a\).
+\end{itemize}
+
+\begin{formula}{محاسبهٔ Q در محیط تصادفی}
+\[
+\boxed{
+Q(s,a)=\sum_{s'}T(s,a,s')
+\left[R(s,a,s')+\gamma V(s')\right]}
+\]
+\end{formula}
+
+\subsection{الگوریتم \eng{Q-Learning}}
+
+\begin{itemize}
+  \item در \eng{Q-Learning} ارزش عمل‌ها در حالت‌ها مستقیماً به‌روزرسانی می‌شود؛ نه فقط ارزش خود حالت‌ها.
+  \item عبارت \(\max_{a'}Q_t(s',a')\) بهترین عمل ممکن در حالت بعدی را نشان می‌دهد.
+\end{itemize}
+
+\begin{formula}{فرمول به‌روزرسانی Q-Learning}
+\[
+\boxed{
+Q_{t+1}(s,a)=(1-\alpha)Q_t(s,a)
++\alpha\left[r+\gamma\max_{a'}Q_t(s',a')\right]}
+\]
+\end{formula}
+
+\subsection{موازنهٔ اکتشاف و بهره‌برداری}
+
+\begin{itemize}
+  \item \term{بهره‌برداری}{Exploitation}: استفاده از بهترین تجربه‌های شناخته‌شدهٔ قبلی؛ انتخاب حریصانه یا \eng{Greedy}.
+  \item \term{اکتشاف}{Exploration}: فرصت‌دادن به عمل‌های کمتر امتحان‌شده برای کشف گزینه‌های احتمالاً بهتر.
+  \item تصمیم‌گیری مؤثر معمولاً به تعادل میان این دو نیاز دارد.
+\end{itemize}
+
+\subsection{\eng{Active RL} و \eng{Passive RL}}
+
+\begin{itemize}
+  \item \term{یادگیری تقویتی ایستا}{Passive RL}:
+  \begin{itemize}
+    \item تمرکز بیشتر بر بهره‌برداری و تجربه‌های قبلی.
+    \item تمایل کمتر به امتحان گزینه‌های جدید.
+    \item امتیاز عمل:
+    \[
+    \boxed{\mathrm{Score}(s,a)=Q(s,a)}
+    \]
+  \end{itemize}
+
+  \item \term{یادگیری تقویتی پویا}{Active RL}:
+  \begin{itemize}
+    \item عدم قطعیت را نیز در انتخاب عمل وارد می‌کند.
+    \item میان اکتشاف و بهره‌برداری تعادل ایجاد می‌کند.
+    \item امتیاز عمل:
+    \[
+    \boxed{\mathrm{Score}(s,a)=Q(s,a)+\beta U(s,a)}
+    \]
+    \item \(U(s,a)\): میزان عدم قطعیت دربارهٔ عمل؛ برای عمل کمتر امتحان‌شده بیشتر است.
+    \item \(\beta\): میزان اهمیت عدم قطعیت در تصمیم عامل.
+    \item مشابه روش \term{کران اطمینان بالا}{Upper Confidence Bound; UCB}.
+  \end{itemize}
+\end{itemize}
+
+\end{document}

@@ -1,0 +1,426 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,top=18mm,bottom=19mm,right=19mm,left=19mm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage[explicit]{titlesec}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage[colorlinks=true,linkcolor=blue!45!black]{hyperref}
+\usepackage{xepersian}
+
+\settextfont[
+  Path={../booklet/font/},
+  UprightFont={IRLotusICEE.ttf},
+  BoldFont={IRLotusICEE_Bold.ttf},
+  BoldItalicFont={IRLotusICEE_BoldIranic.ttf},
+  ItalicFont={IRLotusICEE_Iranic.ttf},
+  FontFace={b}{n}{IRLotusICEE_Bold.ttf},
+  FontFace={bx}{n}{IRLotusICEE_Bold.ttf},
+  FontFace={b}{it}{IRLotusICEE_BoldIranic.ttf},
+  FontFace={bx}{it}{IRLotusICEE_BoldIranic.ttf},
+  FontFace={m}{sl}{IRLotusICEE_Iranic.ttf},
+  Scale=1.15
+]{IRLotusICEE.ttf}
+\setlatintextfont[
+  Path={../booklet/font/},
+  BoldFont={LiberationSerif-Bold.ttf},
+  BoldItalicFont={LiberationSerif-BoldItalic.ttf},
+  ItalicFont={LiberationSerif-Italic.ttf}
+]{LiberationSerif-Regular.ttf}
+\setdigitfont[Path={../booklet/font/},Scale=1.15]{IRLotusICEE.ttf}
+\defpersianfont\titlefont[Path={../booklet/font/},Scale=1]{IRTitr.ttf}
+
+\definecolor{navy}{RGB}{20,65,105}
+\definecolor{greenback}{RGB}{238,248,241}
+\definecolor{yellowback}{RGB}{255,248,225}
+
+\newcommand{\eng}[1]{\lr{#1}}
+\newcommand{\term}[2]{\textbf{#1} \eng{(#2)}}
+\newcommand{\key}[1]{\textcolor{navy}{\textbf{#1}}}
+
+\newtcolorbox{formula}[1]{
+  enhanced,breakable,colback=greenback,colframe=green!45!black,title={#1},
+  fonttitle=\bfseries,boxrule=.6pt,arc=1.5mm,
+  right=3.5mm,left=3.5mm,top=2mm,bottom=2mm,
+  before skip=7pt,after skip=7pt,
+  boxed title style={left=2mm,right=2mm,top=.7mm,bottom=.7mm}
+}
+\newtcolorbox{trap}[1]{
+  enhanced,breakable,colback=yellowback,colframe=orange!65!black,title={#1},
+  fonttitle=\bfseries,boxrule=.6pt,arc=1.5mm,
+  right=3.5mm,left=3.5mm,top=2mm,bottom=2mm,
+  before skip=7pt,after skip=7pt
+}
+
+\setlist[itemize,1]{
+  label=\textcolor{navy}{\large\textbullet},
+  rightmargin=7mm,leftmargin=2mm,topsep=4pt,itemsep=3.5pt,parsep=1pt
+}
+\setlist[itemize,2]{
+  label=\textcolor{navy}{--},
+  rightmargin=7mm,leftmargin=2mm,topsep=2pt,itemsep=2.5pt,parsep=0pt
+}
+\setlist[enumerate]{
+  label=\textcolor{navy}{\arabic*.},
+  rightmargin=9mm,leftmargin=2mm,topsep=4pt,itemsep=3pt
+}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+\setlength{\fboxsep}{5pt}
+\linespread{1.12}
+
+\titleformat{\section}[block]
+  {\normalfont\titlefont\Large\color{white}}
+  {}{0pt}
+  {\colorbox{navy}{\parbox{\dimexpr\textwidth-2\fboxsep\relax}{\raggedleft\strut#1\strut}}}
+\titlespacing*{\section}{0pt}{13pt}{10pt}
+
+\titleformat{\subsection}[hang]
+  {\normalfont\bfseries\large\color{navy}}
+  {\thesubsection}{7pt}{#1}
+  [\vspace{2pt}\color{navy!35}\titlerule]
+\titlespacing*{\subsection}{0pt}{11pt}{7pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\small مرور فصل ۶: شبکه‌های اسپایکی و محاسبات نورومورفیک}
+\fancyhead[L]{\small علوم شناختی محاسباتی}
+\fancyfoot[C]{\thepage}
+\setlength{\headheight}{14pt}
+
+\begin{document}
+
+\begin{center}
+  {\titlefont\LARGE خلاصهٔ امتحانی فصل ۶}\\[3pt]
+  {\Large شبکه‌های اسپایکی و محاسبات نورومورفیک}\\[3pt]
+  {\small مرور تفکیک‌شدهٔ مفاهیم، مقایسه‌ها و فرمول‌ها}
+\end{center}
+
+\section{بخش اول: مبانی شبکه‌های عصبی اسپایکی}
+
+\subsection{چرا شبکه‌های اسپایکی؟}
+
+\begin{itemize}
+  \item \term{شبکهٔ عصبی اسپایکی}{Spiking Neural Network; SNN}: شبکه‌ای که اطلاعات را با رخدادهای گسستهٔ زمانی، یعنی وجود یا نبود اسپایک، منتقل می‌کند.
+  \item هدف: نزدیک‌شدن به پردازش زیستی مغز با درنظرگرفتن \key{زمان، رویداد، یادگیری محلی و مصرف انرژی}.
+  \item در مغز، یادگیری عمدتاً محلی است؛ هر نورون بر اساس ورودی‌ها و وضعیت خود عمل می‌کند و \eng{backpropagation} کلاسیک و سراسری وجود ندارد.
+\end{itemize}
+
+\subsection{مقایسهٔ \eng{ANN} و \eng{SNN}}
+
+\begin{itemize}
+  \item \term{\eng{ANN}}{Artificial Neural Network}:
+  \begin{itemize}
+    \item ورودی و خروجی نورون معمولاً مقدارهای پیوسته‌اند.
+    \item جمع وزن‌دار، \eng{bias} و تابع فعال‌ساز، خروجی عددی تولید می‌کنند.
+    \item وزن‌ها معمولاً با خطای نهایی و \eng{backpropagation} سراسری اصلاح می‌شوند.
+    \item بیشتر لایه‌ها در هر گام محاسباتی فعال‌اند.
+  \end{itemize}
+
+  \item \term{\eng{SNN}}{Spiking Neural Network}:
+  \begin{itemize}
+    \item ورودی و خروجی، دنباله‌ای زمانی از اسپایک‌های صفر و یک است:
+    \[
+    S=[0,1,0,1,1,0,\ldots]
+    \]
+    \item \(1\): اسپایک رخ داده است؛ \(0\): اسپایکی وجود ندارد.
+    \item ترتیب و فاصلهٔ زمانی اسپایک‌ها بخشی از اطلاعات‌اند.
+    \item محاسبه رویدادمحور و بالقوه محلی و کم‌مصرف است.
+  \end{itemize}
+\end{itemize}
+
+\subsection{ساختار نورون زیستی}
+
+\begin{itemize}
+  \item \textbf{دندریت:} دریافت سیگنال نورون‌های دیگر از طریق سیناپس‌ها.
+  \item \term{سوما یا بدنهٔ سلولی}{Soma}: جمع اثر ورودی‌ها و تصمیم برای شلیک.
+  \item \textbf{آکسون:} انتقال اسپایک خروجی به نورون‌های دیگر.
+  \item \textbf{سیناپس:} محل اتصال آکسون یک نورون به دندریت نورون بعدی.
+  \item \term{نورون پیش‌سیناپسی}{Presynaptic Neuron}: فرستندهٔ اطلاعات.
+  \item \term{نورون پس‌سیناپسی}{Postsynaptic Neuron}: دریافت‌کنندهٔ اطلاعات.
+\end{itemize}
+
+\subsection{اسپایک و محاسبهٔ زمان‌محور}
+
+\begin{itemize}
+  \item هر اسپایک ورودی در وزن سیناپسی خود ضرب می‌شود:
+  \[
+  S_i(t)W_i
+  \]
+  \item اثر اسپایک‌ها در ولتاژ غشا جمع می‌شود؛ عبور ولتاژ از آستانه، اسپایک خروجی ایجاد می‌کند.
+  \item برخلاف \eng{ANN}، فقط تعداد اسپایک‌ها مهم نیست؛ \key{زمان وقوع، ترتیب و فاصلهٔ آن‌ها} نیز مهم است.
+  \item هر رخداد می‌تواند همان لحظه پردازش را فعال کند؛ لازم نیست کل شبکه دائماً محاسبه انجام دهد.
+\end{itemize}
+
+\subsection{مدل \eng{LIF}}
+
+\begin{itemize}
+  \item \term{مدل LIF}{Leaky Integrate-and-Fire}: مدل سادهٔ نورون اسپایکی با چهار رفتار اصلی:
+  \begin{itemize}
+    \item \term{تجمع}{Integration}: جمع اثر ورودی‌های وزن‌دار.
+    \item \term{شلیک}{Fire}: تولید اسپایک پس از عبور از آستانه.
+    \item \term{نشت}{Leak}: کاهش تدریجی ولتاژ در نبود ورودی کافی.
+    \item \term{دورهٔ تحریک‌ناپذیری}{Refractory Period}: توقف کوتاه فعالیت یا دشوارشدن شلیک مجدد پس از اسپایک.
+  \end{itemize}
+\end{itemize}
+
+\begin{formula}{معادلات اصلی LIF}
+\[
+\boxed{V(t+1)=\lambda V(t)+I(t)}
+\qquad
+\boxed{I(t)=\sum_i W_iS_i(t)}
+\]
+\[
+V(t+1)\geq V_{\mathrm{threshold}}
+\quad\Longrightarrow\quad
+\text{شلیک اسپایک}
+\]
+\begin{itemize}
+  \item \(V(t)\): ولتاژ قبلی غشا؛ \(\lambda\): ضریب نشت؛ \(I(t)\): جریان ورودی.
+\end{itemize}
+\end{formula}
+
+\begin{itemize}
+  \item پس از شلیک، ولتاژ نورون \eng{reset} می‌شود تا انباشت قبلی بی‌نهایت ادامه پیدا نکند.
+\end{itemize}
+
+\subsection{پردازش رویدادمحور و مصرف انرژی}
+
+\begin{itemize}
+  \item شبکه می‌تواند همیشه آماده‌باش باشد، اما فقط با رسیدن اسپایک محاسبه انجام دهد.
+  \item ورودی صفر معمولاً محاسبهٔ سنگین ایجاد نمی‌کند؛ بنابراین فعالیت پراکنده و رویدادمحور، مصرف انرژی را کم می‌کند.
+  \item کاربردها: تشخیص کلمهٔ بیدارباش، سمعک، سامانهٔ شنود کم‌مصرف، ربات، پهپاد، سامانه‌های \eng{embedded} و واکنش بلادرنگ.
+\end{itemize}
+
+\section{بخش دوم: یادگیری در شبکه‌های اسپایکی}
+
+\subsection{تغییر وزن و قانون \eng{Hebb}}
+
+\begin{itemize}
+  \item یادگیری در سطح سیناپس با تغییر وزن نمایش داده می‌شود:
+  \[
+  \Delta W
+  \]
+  \item مسیرهایی که بارها فعال می‌شوند، وزن بیشتری می‌گیرند و عبور اطلاعات از آن‌ها آسان‌تر می‌شود.
+  \item \term{یادگیری هبی}{Hebbian Learning}: اگر دو نورون مرتب در ارتباط با هم فعال شوند، اتصال آن‌ها تقویت می‌شود:
+  \[
+  \boxed{\text{\lr{Fire together, wire together}}}
+  \]
+  \item «با هم» الزاماً هم‌زمانی دقیق نیست؛ پیش‌سیناپسی شلیک می‌کند و پس‌سیناپسی کمی بعد فعال می‌شود.
+\end{itemize}
+
+\subsection{\eng{STDP} و نقش ترتیب زمانی}
+
+\begin{itemize}
+  \item \textbf{\eng{STDP}} یا \eng{Spike-Timing-Dependent Plasticity}: تغییر وزن بر اساس ترتیب و فاصلهٔ زمانی اسپایک‌های دو نورون.
+  \item اختلاف زمانی:
+  \[
+  \boxed{\Delta t=t_{\mathrm{post}}-t_{\mathrm{pre}}}
+  \]
+  \item \term{\eng{LTP}}{Long-Term Potentiation}:
+  \[
+  t_{\mathrm{pre}}<t_{\mathrm{post}}
+  \Longleftrightarrow \Delta t>0
+  \Longrightarrow \Delta W>0
+  \]
+  پیش‌سیناپسی زودتر شلیک کرده؛ رابطهٔ علّی محتمل است و وزن تقویت می‌شود.
+  \item \term{\eng{LTD}}{Long-Term Depression}:
+  \[
+  t_{\mathrm{pre}}>t_{\mathrm{post}}
+  \Longleftrightarrow \Delta t<0
+  \Longrightarrow \Delta W<0
+  \]
+  پس‌سیناپسی زودتر فعال شده؛ پیش‌سیناپسی احتمالاً علت آن نبوده و وزن تضعیف می‌شود.
+\end{itemize}
+
+\begin{formula}{پنجرهٔ زمانی STDP}
+\[
+\boxed{\Delta W=A_+e^{-\Delta t/\tau_+}}
+\qquad (\Delta t>0)
+\]
+\[
+\boxed{\Delta W=-A_-e^{\Delta t/\tau_-}}
+\qquad (\Delta t<0)
+\]
+\begin{itemize}
+  \item \(A_+,A_-\): دامنهٔ تقویت و تضعیف؛ \(\tau_+,\tau_-\): ثابت‌های زمانی.
+  \item هرچه \(|\Delta t|\) کوچک‌تر باشد، ارتباط زمانی و مقدار تغییر وزن بیشتر است.
+  \item اختلاف زمانی زمانی معنا دارد که هر دو نورون اسپایک زده باشند.
+\end{itemize}
+\end{formula}
+
+\subsection{\eng{Reward-Modulated STDP}}
+
+\begin{itemize}
+  \item \eng{STDP} تعیین می‌کند \key{کدام سیناپس‌ها} از نظر زمانی در رفتار نقش داشته‌اند.
+  \item خطای پیش‌بینی پاداش تعیین می‌کند تغییر آن سیناپس‌ها \key{در چه جهتی} باشد:
+  \[
+  \delta=R_{\mathrm{actual}}-R_{\mathrm{predicted}}
+  \]
+  \item \term{ردپای شایستگی}{Eligibility Trace}: رد موقت سیناپس‌های مرتبط که تا رسیدن پاداش حفظ می‌شود.
+\end{itemize}
+
+\begin{formula}{تغییر وزن با تعدیل پاداش}
+\[
+\boxed{\Delta W=\eta\times\delta\times E(t)}
+\]
+\begin{itemize}
+  \item \(\eta\): نرخ یادگیری؛ \(\delta\): خطای پیش‌بینی پاداش؛ \(E(t)\): اثر \eng{STDP} یا ردپای شایستگی.
+  \item \(\delta>0\): سیناپس مرتبط تقویت می‌شود؛ \(\delta<0\): همان سیناپس می‌تواند تضعیف شود.
+\end{itemize}
+\end{formula}
+
+\begin{trap}{نکتهٔ مفهومی}
+\eng{STDP} مسئلهٔ «چه کسی در رفتار نقش داشت؟» و سیگنال پاداش مسئلهٔ «نتیجه خوب بود یا بد؟» را حل می‌کند. ترکیب آن‌ها به مسئلهٔ نسبت‌دادن اعتبار کمک می‌کند.
+\end{trap}
+
+\section{بخش سوم: شبکه‌های اسپایکی عمیق}
+
+\subsection{از \eng{SNN} پایه به \eng{Deep SNN}}
+
+\begin{itemize}
+  \item \textbf{\eng{Deep SNN}}: چند لایهٔ اسپایکی متوالی که خروجی اسپایکی هر لایه، ورودی لایهٔ بعد است.
+  \item در هر لایه این زنجیره تکرار می‌شود:
+  \[
+  \text{اسپایک}\rightarrow\text{وزن}\rightarrow\text{جریان}
+  \rightarrow\text{ولتاژ}\rightarrow\text{آستانه}\rightarrow\text{اسپایک}
+  \]
+  \item خروجی دودویی نورون:
+  \[
+  \boxed{
+  S=
+  \begin{cases}
+  1 & V>\theta\\
+  0 & V\leq\theta
+  \end{cases}}
+  \]
+  \item اثر ورودی‌های متعدد:
+  \[
+  I=xw,\qquad
+  V=x_1w_1+x_2w_2+x_3w_3+\cdots
+  \]
+\end{itemize}
+
+\subsection{الهام زیستی از سلسله‌مراتب مغز}
+
+\begin{itemize}
+  \item در بینایی، پردازش از ویژگی‌های ساده در \eng{V1} به بازنمایی‌های پیچیده‌تر در \eng{V2/V3/V4}، \eng{MT/V5} و \eng{IT} می‌رسد.
+  \item لایه‌های اولیه: لبه، خط، جهت و رنگ؛ لایه‌های بالاتر: شکل، چهره، هویت و مفهوم شیء.
+  \item \term{مسیر شکمی}{Ventral}: تشخیص «چیستی» شیء یا \eng{What}.
+  \item \term{مسیر پشتی}{Dorsal}: «کجایی/چگونگی»، حرکت و تعامل یا \eng{Where/How}.
+  \item در لامسه، \eng{S1} اطلاعات اولیه مانند لمس، درد و دما؛ \eng{S2} اطلاعات ترکیبی‌تر و انتزاعی‌تر را پردازش می‌کند.
+\end{itemize}
+
+\subsection{مزیت انرژی و محدودیت \eng{STDP}}
+
+\begin{itemize}
+  \item مغز با وجود پیچیدگی زیاد حدود \(20\) وات مصرف می‌کند؛ رویدادمحوری و محلی‌بودن محاسبه از دلایل بهینگی آن‌اند.
+  \item \eng{STDP} برای شبکهٔ کوچک، یادگیری بدون ناظر، برخط و زیستی‌تر مناسب است.
+  \item در شبکهٔ عمیق، \eng{STDP} به‌تنهایی با همگرایی دشوار، دقت کمتر و مشکل تنظیم دقیق وزن‌های چند لایه روبه‌رو است.
+  \item برای \eng{Deep SNN} نظارت‌شده معمولاً به روشی شبیه \eng{backpropagation} نیاز است.
+\end{itemize}
+
+\subsection{مسئلهٔ مشتق‌پذیری و \eng{Surrogate Gradient}}
+
+\begin{itemize}
+  \item تابع اسپایک یک تابع پله‌ای است و تقریباً همه‌جا مشتق صفر دارد؛ پس گرادیان لازم برای پس‌انتشار عبور نمی‌کند.
+  \item \textbf{\eng{Surrogate Gradient}}: استفاده از یک تابع نرم و مشتق‌پذیر فقط برای محاسبهٔ گرادیان.
+  \item \textbf{در گذر رو به جلو:} تابع واقعی اسپایک و خروجی صفر یا یک استفاده می‌شود.
+  \item \textbf{در گذر رو به عقب:} مشتق تابع جایگزین، مانند تقریب نرم شبیه \eng{sigmoid}، استفاده می‌شود.
+  \item تابع جایگزین با تابع فعال‌ساز معمولی فرق دارد: رفتار \eng{forward} را تغییر نمی‌دهد و فقط ابزار آموزش است.
+\end{itemize}
+
+\subsection{\eng{Feedforward} و وضعیت زمانی نورون}
+
+\begin{formula}{به‌روزرسانی جریان، ولتاژ و اسپایک}
+\[
+\boxed{I[t+1]=\alpha I[t]+S[t]W}
+\]
+\[
+\boxed{V[t+1]=\beta V[t]+I[t+1]}
+\]
+\[
+\boxed{
+S[t+1]=
+\begin{cases}
+1 & V[t+1]>\theta\\
+0 & V[t+1]\leq\theta
+\end{cases}}
+\]
+\begin{itemize}
+  \item \(\alpha\): ضریب کاهش جریان؛ \(\beta\): ضریب نشت ولتاژ؛ \(\theta\): آستانه.
+  \item پس از اسپایک، ولتاژ و گاهی جریان ریست یا کاهش می‌یابد.
+\end{itemize}
+\end{formula}
+
+\subsection{\eng{Backpropagation} با گرادیان جایگزین}
+
+\begin{formula}{خطا و به‌روزرسانی وزن}
+\[
+\boxed{E=\frac{1}{2}(T-O)^2}
+\]
+\[
+\boxed{W_{\mathrm{new}}=W_{\mathrm{old}}
+-\eta\frac{\partial E}{\partial W}}
+\]
+\[
+\frac{\partial E}{\partial W}
+=
+\underbrace{\frac{\partial E}{\partial O}}_{O-T}
+\cdot
+\underbrace{\frac{\partial O}{\partial Net}}_{\text{مشتق جایگزین}}
+\cdot
+\underbrace{\frac{\partial Net}{\partial W}}_{X},
+\qquad Net=XW
+\]
+\end{formula}
+
+\subsection{مثال عددی گرادیان جایگزین}
+
+\begin{enumerate}
+  \item داده‌ها:
+  \[
+  X=2,\quad W=0.4,\quad \theta=1,\quad T=1,\quad V_0=0
+  \]
+  \item گذر رو به جلو:
+  \[
+  Net=XW=2(0.4)=0.8<1\quad\Longrightarrow\quad O=0
+  \]
+  \item با فرض مشتق جایگزین \(0.25\):
+  \[
+  \frac{\partial E}{\partial W}
+  =(O-T)(0.25)X=(-1)(0.25)(2)=-0.5
+  \]
+  \item با \(\eta=0.1\):
+  \[
+  \boxed{W_{\mathrm{new}}=0.4-0.1(-0.5)=0.45}
+  \]
+  وزن افزایش می‌یابد تا نورون دفعهٔ بعد آسان‌تر به آستانه برسد.
+\end{enumerate}
+
+\subsection{\eng{STDP} در برابر \eng{Surrogate Gradient}}
+
+\begin{itemize}
+  \item \textbf{\eng{STDP}:} شبکهٔ کوچک یا کم‌عمق، بدون ناظر، یادگیری برخط، قانون محلی و زیستی‌تر.
+  \item \textbf{\eng{Surrogate Gradient}:} شبکهٔ عمیق، نظارت‌شده، مقایسهٔ خروجی با برچسب و تنظیم دقیق چندین لایه.
+  \item گرادیان جایگزین فقط در \key{آموزش} استفاده می‌شود.
+  \item پس از آموزش، \key{استنتاج} همچنان اسپایکی، رویدادمحور و مناسب سخت‌افزار نورومورفیک است.
+\end{itemize}
+
+\begin{trap}{جمع‌بندی سریع}
+\[
+\text{\lr{Basic SNN}}
+\xrightarrow{\mathrm{STDP}}
+\text{\lr{Local Learning}}
+\qquad
+\text{\lr{Deep SNN}}
+\xrightarrow{\text{\lr{Surrogate Gradient}}}
+\text{\lr{Deep Training}}
+\]
+\eng{SNN} پایه با \eng{STDP} به یادگیری محلی و \eng{Deep SNN} با گرادیان جایگزین به آموزش چندلایه می‌رسد.
+ارزش عملی اصلی \eng{SNN} در اجرای کم‌مصرف روی ربات، پهپاد، سامانهٔ نهفته و سخت‌افزار نورومورفیک دیده می‌شود.
+\end{trap}
+
+\end{document}

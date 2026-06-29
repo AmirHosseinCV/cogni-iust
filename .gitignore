@@ -1,0 +1,8 @@
+# LaTeX build artifacts for standalone chapter summaries
+summaries/*.aux
+summaries/*.fdb_latexmk
+summaries/*.fls
+summaries/*.log
+summaries/*.out
+summaries/*.xdv
+texput.log

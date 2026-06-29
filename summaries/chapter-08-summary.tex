@@ -1,0 +1,529 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[a4paper,top=18mm,bottom=19mm,right=19mm,left=19mm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage[explicit]{titlesec}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage[colorlinks=true,linkcolor=blue!45!black]{hyperref}
+\usepackage{xepersian}
+
+\settextfont[
+  Path={../booklet/font/},
+  UprightFont={IRLotusICEE.ttf},
+  BoldFont={IRLotusICEE_Bold.ttf},
+  BoldItalicFont={IRLotusICEE_BoldIranic.ttf},
+  ItalicFont={IRLotusICEE_Iranic.ttf},
+  FontFace={b}{n}{IRLotusICEE_Bold.ttf},
+  FontFace={bx}{n}{IRLotusICEE_Bold.ttf},
+  FontFace={b}{it}{IRLotusICEE_BoldIranic.ttf},
+  FontFace={bx}{it}{IRLotusICEE_BoldIranic.ttf},
+  FontFace={m}{sl}{IRLotusICEE_Iranic.ttf},
+  Scale=1.15
+]{IRLotusICEE.ttf}
+\setlatintextfont[
+  Path={../booklet/font/},
+  BoldFont={LiberationSerif-Bold.ttf},
+  BoldItalicFont={LiberationSerif-BoldItalic.ttf},
+  ItalicFont={LiberationSerif-Italic.ttf}
+]{LiberationSerif-Regular.ttf}
+\setdigitfont[Path={../booklet/font/},Scale=1.15]{IRLotusICEE.ttf}
+\defpersianfont\titlefont[Path={../booklet/font/},Scale=1]{IRTitr.ttf}
+
+\definecolor{navy}{RGB}{20,65,105}
+\definecolor{greenback}{RGB}{238,248,241}
+\definecolor{yellowback}{RGB}{255,248,225}
+
+\newcommand{\eng}[1]{\lr{#1}}
+\newcommand{\term}[2]{\textbf{#1} \eng{(#2)}}
+\newcommand{\key}[1]{\textcolor{navy}{\textbf{#1}}}
+
+\newtcolorbox{formula}[1]{
+  enhanced,breakable,colback=greenback,colframe=green!45!black,title={#1},
+  fonttitle=\bfseries,boxrule=.6pt,arc=1.5mm,
+  right=3.5mm,left=3.5mm,top=2mm,bottom=2mm,
+  before skip=7pt,after skip=7pt,
+  boxed title style={left=2mm,right=2mm,top=.7mm,bottom=.7mm}
+}
+\newtcolorbox{trap}[1]{
+  enhanced,breakable,colback=yellowback,colframe=orange!65!black,title={#1},
+  fonttitle=\bfseries,boxrule=.6pt,arc=1.5mm,
+  right=3.5mm,left=3.5mm,top=2mm,bottom=2mm,
+  before skip=7pt,after skip=7pt
+}
+
+\setlist[itemize,1]{
+  label=\textcolor{navy}{\large\textbullet},
+  rightmargin=7mm,leftmargin=2mm,topsep=4pt,itemsep=3.5pt,parsep=1pt
+}
+\setlist[itemize,2]{
+  label=\textcolor{navy}{--},
+  rightmargin=7mm,leftmargin=2mm,topsep=2pt,itemsep=2.5pt,parsep=0pt
+}
+\setlist[enumerate,1]{
+  label=\textcolor{navy}{\arabic*.},
+  rightmargin=9mm,leftmargin=2mm,topsep=4pt,itemsep=3pt
+}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+\setlength{\fboxsep}{5pt}
+\linespread{1.12}
+\renewcommand{\arraystretch}{1.3}
+
+\titleformat{\section}[block]
+  {\normalfont\titlefont\Large\color{white}}
+  {}{0pt}
+  {\colorbox{navy}{\parbox{\dimexpr\textwidth-2\fboxsep\relax}{\raggedleft\strut#1\strut}}}
+\titlespacing*{\section}{0pt}{13pt}{10pt}
+
+\titleformat{\subsection}[hang]
+  {\normalfont\bfseries\large\color{navy}}
+  {\thesubsection}{7pt}{#1}
+  [\vspace{2pt}\color{navy!35}\titlerule]
+\titlespacing*{\subsection}{0pt}{11pt}{7pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[R]{\small مرور فصل ۸: هم‌ترازی مغز، کدگذاری عصبی و استدلال}
+\fancyhead[L]{\small علوم شناختی محاسباتی}
+\fancyfoot[C]{\thepage}
+\setlength{\headheight}{14pt}
+
+\begin{document}
+
+\begin{center}
+  {\titlefont\LARGE خلاصهٔ امتحانی فصل ۸}\\[3pt]
+  {\Large هم‌ترازی مغز، کدگذاری عصبی و استدلال}\\[3pt]
+  {\small مرور تفکیک‌شدهٔ نظریه‌ها، مراحل، مقایسه‌ها و فرمول‌ها}
+\end{center}
+
+\section{بخش اول: کدگذاری و رمزگشایی عصبی}
+
+\subsection{\eng{Neural Encoding} و \eng{Neural Decoding}}
+
+\begin{itemize}
+  \item \term{کدگذاری عصبی}{Neural Encoding}: تبدیل محرک خارجی مانند صدا، تصویر یا لمس به فعالیت عصبی.
+  \item \term{رمزگشایی عصبی}{Neural Decoding}: بازسازی محرک، نیت، فرمان، رفتار یا متن از روی فعالیت مغزی.
+  \[
+  \boxed{\text{\rl{محرک خارجی}}
+  \longrightarrow\text{\rl{فعالیت مغزی}}
+  \longrightarrow\text{\rl{فرمان یا رفتار}}}
+  \]
+  \item \eng{Encoding} مسیر اول و \eng{Decoding} تلاش برای پیمودن مسیر معکوس است.
+\end{itemize}
+
+\subsection{سه نظریهٔ اصلی \eng{Neural Coding}}
+
+\begin{itemize}
+  \item \term{\eng{Grandmother Cell}}{Grandmother Cell Theory}:
+  \begin{itemize}
+    \item یک نورون یا گروه بسیار کوچک، نمایندهٔ اختصاصی یک مفهوم است.
+    \item مزیت: تفسیرپذیری بالا؛ ضعف: آسیب‌پذیری، ظرفیت نامعقول و نیاز به نماینده برای مفاهیم بسیار زیاد.
+    \item شباهت محاسباتی: نودهای اختصاصی کلاس در لایهٔ خروجی.
+  \end{itemize}
+  \item \term{کدگذاری جمعیتی}{Population Coding}:
+  \begin{itemize}
+    \item تصمیم از مشارکت تعداد زیادی نورون با شدت و وزن متفاوت ساخته می‌شود:
+    \[
+    \boxed{\sum_i W_iX_i}
+    \]
+    \item مزایا: پایداری در برابر آسیب، دقت و ظرفیت ترکیبی بیشتر.
+    \item ضعف‌ها: مصرف انرژی بیشتر، توزیع‌شدگی و تفسیرپذیری کمتر.
+  \end{itemize}
+  \item \term{کدگذاری تنک}{Sparse Coding}:
+  \begin{itemize}
+    \item فقط زیرمجموعه‌ای کوچک و مرتبط، مثلاً حدود \(5\%\) تا \(20\%\)، از نورون‌ها برای هر وظیفه فعال می‌شوند.
+    \item حالت میانی: پایداری بهتر از بازنمایی اختصاصی، انرژی و تفسیرپذیری بهتر از کدگذاری کاملاً جمعیتی.
+  \end{itemize}
+\end{itemize}
+
+\subsection{مقایسه و ترکیب نظریه‌ها}
+
+\[
+\boxed{
+\begin{aligned}
+\text{\rl{لایه‌های ابتدایی}}&\longrightarrow\mathrm{Population\ Coding}\\
+\text{\rl{لایه‌های میانی}}&\longrightarrow\mathrm{Sparse\ Coding}\\
+\text{\rl{لایه‌های انتهایی}}&\longrightarrow\mathrm{Grandmother\text{-}like}
+\end{aligned}}
+\]
+
+\begin{itemize}
+  \item ابتدایی: ویژگی‌های خام مانند فرکانس، واج، لبه، جهت و رنگ؛ توزیع‌شده و کم‌تفسیر.
+  \item میانی: شکل و ویژگی‌های انتزاعی‌تر؛ گروه‌های منتخب فعال می‌شوند.
+  \item انتهایی: کلاس یا مفهوم مشخص؛ بازنمایی اختصاصی‌تر.
+  \item \eng{Symbolic AI} بیشتر به \eng{Sparse Coding} نزدیک است: مجموعه‌ای منتخب از قواعد و ویژگی‌های صریح در تصمیم نقش دارند.
+\end{itemize}
+
+\subsection{\eng{Brain-to-QWERTY} و \eng{Brain-to-Text}}
+
+\begin{itemize}
+  \item نمونهٔ مطرح‌شده: پژوهش \eng{Meta} در سال \(2025\) دربارهٔ \eng{Brain-to-QWERTY}.
+  \item هدف محدود \eng{Brain-to-QWERTY}: رمزگشایی کلیدهایی که فرد هنگام تایپ فشار داده یا قصد فشار‌دادن آن‌ها را داشته است؛ نه خواندن تمام افکار.
+  \item مرحلهٔ آموزش:
+  \begin{enumerate}
+    \item نمایش و خواندن متن توسط فرد.
+    \item تایپ متن با صفحه‌کلید \eng{QWERTY}.
+    \item ثبت هم‌زمان سیگنال مغزی.
+    \item مقایسهٔ خروجی مدل با متن یا کلیدهای مورد انتظار.
+    \item محاسبهٔ خطا، اصلاح وزن‌ها و کالیبراسیون برای همان فرد.
+  \end{enumerate}
+  \item فاز آزمون: متن هدف نامعلوم است و مدل فقط از فعالیت مغزی، متن یا نیت تایپ را بازسازی می‌کند.
+\end{itemize}
+
+\begin{formula}{معماری کلی \eng{Brain-to-Text}}
+\[
+\boxed{
+\text{\rl{سیگنال مغزی}}
+\rightarrow\mathrm{CNN}
+\rightarrow\text{\rl{ویژگی میانی}}
+\rightarrow\mathrm{Decoder\text{-}only\ Transformer}
+\rightarrow\mathrm{Language\ Model}
+\rightarrow\text{\rl{متن}}}
+\]
+\begin{itemize}
+  \item \eng{CNN}: استخراج ویژگی از سیگنال خام.
+  \item \eng{Transformer}: مدل‌کردن توالی کلیدها یا حروف.
+  \item \eng{Language Model}: اصلاح کانتکستی و خطاهایی مانند «صلام» به «سلام».
+\end{itemize}
+\end{formula}
+
+\subsection{کاربرد و مقایسه با \eng{Neuralink}}
+
+\begin{itemize}
+  \item کاربرد: ارتباط برای افراد دچار آسیب نخاعی یا محدودیت شدید حرکتی؛ تبدیل نیت ذهنی به متن یا فرمان.
+  \item \textbf{\eng{Brain-to-QWERTY}}: دامنهٔ محدود به تایپ و کلیدهای صفحه‌کلید.
+  \item \textbf{\eng{Neuralink}}: ایمپلنت تهاجمی برای تبدیل نیت حرکتی به کنترل ماوس، کلیک یا ابزار خارجی.
+\end{itemize}
+
+\subsection{روش‌های ثبت فعالیت مغزی}
+
+\begin{itemize}
+  \item \textbf{\eng{fMRI}:} غیرتهاجمی، مبتنی بر جریان خون، رزولوشن مکانی خوب و زمانی ضعیف در مقیاس ثانیه.
+  \item \textbf{\eng{EEG}:} غیرتهاجمی، ثبت الکتریکی از پوست سر، رزولوشن زمانی خوب در حد میلی‌ثانیه و مکانی ضعیف‌تر.
+  \item \textbf{ایمپلنت مغزی:} تهاجمی، نزدیک به نورون‌ها و دارای رزولوشن زمانی و مکانی بهتر؛ همراه با خطر جراحی، پایداری و مسائل اخلاقی.
+\end{itemize}
+
+\subsection{چالش‌ها و مسیر آینده}
+
+\begin{itemize}
+  \item \term{\eng{Plasticity}}{Plasticity}: مغز با یادگیری، خستگی و زمان تغییر می‌کند؛ مدل کالیبره‌شده ممکن است بعداً همان توزیع سیگنال را نبیند.
+  \item \textbf{تعمیم بین افراد:} نقشهٔ مغزی مانند اثر انگشت متفاوت است؛ مدل یک فرد الزاماً روی دیگری کار نمی‌کند.
+  \item \term{چندوجهی‌بودن}{Multimodality}: متن، تصویر، صدا، حافظه، توجه و هیجان هم‌زمان بر فعالیت مغز اثر دارند.
+  \item هدف سخت‌افزاری: سنسور غیرتهاجمی، پوشیدنی، دقیق، کم‌مصرف و کم‌حرارت.
+  \item \term{\eng{Neuromorphic}}{Neuromorphic Hardware}: پردازش رویدادمحور به‌جای پردازش دائم مبتنی بر کلاک:
+  \[
+  \boxed{\mathrm{Spike/Event}\longrightarrow\mathrm{Processing}}
+  \]
+\end{itemize}
+
+\subsection{وزن نهایی نورونی}
+
+\begin{formula}{عوامل شکل‌دهندهٔ وزن}
+\[
+\boxed{
+\text{\rl{وزن نهایی}}
+=\mathrm{Hebbian\ Learning}
++\text{\rl{ترجیح مکانی}}
++\text{\rl{مقداردهی اولیه}}}
+\]
+\begin{itemize}
+  \item قانون \eng{Hebb}: هم‌فعالی مکرر، اتصال را تقویت می‌کند.
+  \item ترجیح مکانی/عملکردی: نورون‌های سازگار با جهت یا کار خاص فعالیت بیشتری دارند.
+  \item مقداردهی اولیه: تفاوت‌های اولیهٔ افراد بر پاسخ نهایی اثر می‌گذارد.
+\end{itemize}
+\end{formula}
+
+\section{بخش دوم: \eng{Brain Alignment} و \eng{Brain Score}}
+
+\subsection{ایدهٔ اصلی هم‌ترازی}
+
+\begin{itemize}
+  \item \term{فرضیهٔ بازنمایی افلاطونی}{Platonic Representation Hypothesis}: پشت بازنمایی‌های ظاهری، یک مفهوم یا حقیقت زیرین مشترک وجود دارد.
+  \item این حقیقت زیرین را می‌توان با متغیر پنهان \(Z\) نشان داد؛ خود \(Z\) مستقیماً در دسترس نیست.
+  \item تصویر، متن، صدا، رفتار، فعالیت مغزی و \eng{hidden state} مدل، بازنمایی‌های متفاوت همان \(Z\) مشترک‌اند:
+  \[
+  \boxed{
+  Z\longrightarrow
+  \left\{
+  \text{\rl{متن، تصویر، رفتار، مغز، بازنمایی مدل}}
+  \right\}}
+  \]
+  \item پاسخ درست به‌تنهایی فهم را ثابت نمی‌کند؛ مدل ممکن است الگوی سطحی را حفظ کرده باشد.
+  \item مدل عمیق‌تر باید از پوستهٔ ظاهری عبور کند و ویژگی انتزاعی و رابطهٔ علّی را حفظ کند؛ مثلاً «سیب کپک‌زده» را با وجود تغییر ظاهر همچنان سیب تشخیص دهد.
+  \item \textbf{\eng{Brain Alignment}}: سنجش اینکه بازنمایی‌های میانی مدل تا چه حد با بازنمایی‌های مغز انسان قابل نگاشت و هم‌راستا هستند.
+  \item اثبات قطعی «فهم» ممکن نیست؛ هدف عملی، یافتن نقاطی است که مدل در آن‌ها از معنا یا رفتار انسان فاصله دارد.
+\end{itemize}
+
+\subsection{طراحی آزمایش هم‌ترازی}
+
+\begin{enumerate}
+  \item تعریف بخش‌های میانی مغز با \eng{Brain Parcellation}.
+  \item انتخاب وظیفهٔ مناسب: زبانی، پیش‌بینی، استدلالی، علّی یا چندوجهی.
+  \item ارائهٔ محرک یکسان به انسان و مدل.
+  \item استخراج \eng{fMRI}/رفتار انسان و \eng{hidden state}های مدل.
+  \item تعریف امتیاز با \eng{correlation}، \eng{similarity} یا \eng{loss}.
+\end{enumerate}
+
+\subsection{آزمایش \eng{Brain Score}}
+
+\begin{itemize}
+  \item مدل اصلی \eng{freeze} می‌شود؛ هدف ارزیابی بازنمایی موجود است.
+  \item از لایه‌های مدل بردارهایی مانند \(v_1,v_2,v_3\) و از انسان \eng{fMRI} و رفتارهایی مانند زمان خواندن گرفته می‌شود.
+  \item یک \term{مدل نگاشت}{Mapping Model} ساده، معمولاً خطی، یاد می‌گیرد:
+  \[
+  \boxed{\text{\rl{بازنمایی مدل}}\longrightarrow
+  \text{\rl{سیگنال مغزی یا رفتار انسان}}}
+  \]
+  \item آموزش: یادگیری نگاشت روی متن‌های مشترک؛ آزمون: پیش‌بینی پاسخ مغز/رفتار برای متن جدید و مقایسه با دادهٔ واقعی.
+  \item امتیاز می‌تواند ترکیبی از هم‌ترازی \eng{fMRI}، خروجی، زمان خواندن و پیش‌بینی باشد.
+\end{itemize}
+
+\subsection{اهمیت \eng{Next Word Prediction}}
+
+\begin{itemize}
+  \item وظایف بررسی‌شده: \eng{QA}، انسجام، \eng{entailment}، شباهت جمله و پیش‌بینی واژهٔ بعدی.
+  \item همبستگی مثبت مهم‌تر در \eng{Next Word Prediction} دیده شد؛ مغز دائماً پیش‌بینی می‌کند.
+  \item جملهٔ قابل‌پیش‌بینی: اطمینان مدل بیشتر و خواندن انسان سریع‌تر؛ عبارت غیرمنتظره: اطمینان کمتر و مکث بیشتر.
+\end{itemize}
+
+\subsection{\eng{Brain Parcellation}: واحدها}
+
+\begin{itemize}
+  \item \term{\eng{Voxel}}{Voxel}: واحد مکعبی اندازه‌گیری در \eng{fMRI}؛ نه یک مرز طبیعی زیستی.
+  \item \term{\eng{Parcel}}{Parcel}: گروهی از وکسل‌ها با ویژگی مشترک.
+  \item \term{\eng{Atlas}}{Atlas}: مجموعه‌ای از پارسل‌ها و نقشهٔ تقسیم‌بندی مغز.
+  \item \term{\eng{ROI}}{Region of Interest}: ناحیهٔ منتخب متناسب با وظیفه، مثلاً نواحی زبان.
+\end{itemize}
+
+\[
+\boxed{
+\text{\rl{چند وکسل}}\longrightarrow
+\text{\rl{یک پارسل}}\longrightarrow
+\text{\rl{اطلس/افراز‌بندی}}}
+\]
+
+\subsection{سیگنال \eng{BOLD}}
+
+\begin{itemize}
+  \item \[
+  \boxed{\mathrm{BOLD}=\mathrm{Blood\ Oxygen\ Level\ Dependent}}
+  \]
+  \item شاخص تغییر اکسیژن خون و نشانهٔ غیرمستقیم فعالیت عصبی.
+  \item برای هر وکسل یک سری زمانی داریم؛ میانگین وکسل‌های یک پارسل، بازنمایی زمانی آن پارسل را می‌سازد.
+  \item مثال: سه وکسل در چهار زمان \(\Rightarrow\) ماتریس \(3\times4\)، سپس بردار میانگین پارسل.
+\end{itemize}
+
+\subsection{روش‌های \eng{Parcellation}}
+
+\begin{itemize}
+  \item \textbf{آناتومیک:} تقسیم بر اساس محل و ساختار فیزیکی، مانند \eng{V1,V2,V4,IT}.
+  \item \term{\eng{Functional Parcellation}}{Functional Parcellation}: گروه‌بندی نواحی دور یا نزدیک بر اساس هم‌فعال‌شدن و کارکرد مشترک.
+  \item \term{\eng{Atlas}}{Atlas}: استفاده از تقسیم‌بندی ازپیش‌ساخته‌شده.
+  \item \term{\eng{Localizer}}{Localizer}: یافتن ناحیه‌های فعال با اجرای همان وظیفه روی شرکت‌کننده.
+\end{itemize}
+
+\subsection{شبکه‌های هفت‌گانهٔ \eng{Yeo}}
+
+\begin{enumerate}
+  \item \textbf{\eng{Visual}:} پردازش دیداری، عمدتاً بخش پس‌سری.
+  \item \textbf{\eng{Somatomotor}:} حس بدنی، حرکت و هماهنگی عضلات.
+  \item \textbf{\eng{Dorsal Attention}:} توجه ارادی و درون‌هدایت‌شده.
+  \item \textbf{\eng{Ventral Attention}:} توجه ناگهانی ناشی از محرک بیرونی.
+  \item \textbf{\eng{Frontoparietal}:} کنترل، تصمیم‌گیری، هماهنگی چند وظیفه و رفتار.
+  \item \textbf{\eng{Default Mode Network; DMN}:} استراحت، تفکر آزاد، خیال‌پردازی و ایده‌پردازی.
+  \item \textbf{\eng{Limbic}:} احساس، هیجان و پردازش عاطفی.
+\end{enumerate}
+
+\subsection{\eng{Resting State} و همبستگی}
+
+\begin{itemize}
+  \item استراحت به معنای خاموشی مغز نیست؛ شبکه‌ها همچنان فعال و در حال پیش‌بینی‌اند.
+  \item مغز حدود \(20\%\) انرژی بدن را مصرف می‌کند؛ وظیفهٔ شناختی بیشتر الگوی شبکه‌ها را تغییر می‌دهد و افزایش انرژی نسبت به خط پایه محدود است.
+  \item ساخت افراز‌بندی کارکردی:
+  \begin{enumerate}
+    \item گرفتن سری زمانی \eng{BOLD} هر وکسل؛
+    \item محاسبهٔ همبستگی سری‌ها؛
+    \item خوشه‌بندی وکسل‌های با همبستگی بالا؛
+    \item درنظرگرفتن هر خوشه به‌عنوان پارسل یا شبکه.
+  \end{enumerate}
+  \item \term{\eng{Task-Positive}}{Task-Positive}: هنگام انجام وظیفه فعال‌ترند؛ مثال‌ها: توجه پشتی، توجه شکمی و فرونتوپاریتال.
+  \item \term{\eng{Task-Negative}}{Task-Negative}: با شروع وظیفه کاهش فعالیت دارند؛ مثال اصلی: \eng{DMN}.
+\end{itemize}
+
+\begin{trap}{مثال سریع \eng{Task-Positive} و \eng{Task-Negative}}
+\begin{itemize}
+  \item \textbf{مطالعهٔ متمرکز یا حل مسئله:} شبکه‌های توجه و فرونتوپاریتال بالا می‌روند و \eng{DMN} معمولاً کاهش می‌یابد.
+  \item \textbf{استراحت، خیال‌پردازی و تفکر آزاد:} \eng{DMN} فعال‌تر است و شبکه‌های وظیفه‌مثبت فعالیت کمتری دارند.
+  \item این رابطه مطلق و روشن/خاموشی نیست؛ الگوی فعالیت نسبی شبکه‌ها تغییر می‌کند.
+\end{itemize}
+\end{trap}
+
+\subsection{بازگشت به \eng{Brain Alignment}}
+
+\[
+\boxed{
+\mathrm{Parcel/BOLD}
+\overset{\mathrm{Correlation/Similarity}}{\longleftrightarrow}
+\mathrm{Hidden\ State}}
+\]
+
+\begin{itemize}
+  \item همبستگی بالاتر یعنی هم‌ترازی بازنمایی بیشتر، نه اثبات قطعی فهم حقیقی.
+  \item وظایف سخت‌تر مانند استنتاج، کشف قانون و تشخیص مغالطه برای آزمون معنا مناسب‌ترند.
+\end{itemize}
+
+\begin{enumerate}
+  \item تقسیم مغز به پارسل‌های کارکردی.
+  \item استخراج سیگنال \eng{BOLD} یا بازنمایی زمانی هر پارسل.
+  \item استخراج \eng{hidden state}های لایه‌های میانی مدل.
+  \item محاسبهٔ \eng{correlation} یا \eng{similarity} میان بازنمایی مغز و مدل.
+\end{enumerate}
+
+\section{بخش سوم: استدلال، قیاس و هم‌ترازی خطا}
+
+\subsection{چرا پاسخ درست کافی نیست؟}
+
+\begin{itemize}
+  \item هم‌ترازی فقط شباهت پاسخ نهایی نیست؛ باید \key{الگوی خطا} و مسیر رسیدن به پاسخ نیز مقایسه شود.
+  \item مدل هم‌تراز باید تا حدی در همان موقعیت‌هایی خطا کند که انسان‌ها خطا می‌کنند.
+  \item دقت بیشتر از انسان الزاماً به معنای فهم یا استدلال انسانی نیست.
+  \item برخی سوگیری‌ها و خطاهای شناختی را می‌توان \key{بهینه‌سازی تکاملی} دانست: فیلتر اطلاعات برای کاهش انرژی و تصمیم سریع‌تر برای بقا؛ بنابراین هر خطای انسانی صرفاً «باگ» نیست.
+  \item \term{\eng{Pareidolia}}{Pareidolia}: دیدن چهره یا الگوی آشنا در ابر یا اشیای بی‌جان؛ خطای ادراکی که می‌تواند از نظر بقا و تعامل اجتماعی مفید باشد.
+\end{itemize}
+
+\subsection{\eng{System 1} و \eng{System 2}}
+
+\begin{itemize}
+  \item \textbf{\eng{System 1}:} سریع، کم‌هزینه، شهودی، مبتنی بر تجربه و \eng{prior knowledge}.
+  \item \textbf{\eng{System 2}:} کند، پرهزینه، تحلیلی و نیازمند بررسی و اثبات.
+  \item تفکر انتقادی یعنی در موقعیت لازم از پاسخ پیش‌فرض سیستم ۱ عبور و سیستم ۲ را فعال کنیم.
+\end{itemize}
+
+\subsection{انواع \eng{Reasoning}}
+
+\begin{itemize}
+  \item \term{قیاسی}{Deductive}: نتیجهٔ ضروری از مقدمات.
+  \item \term{استقرایی}{Inductive}: تعمیم از نمونه‌ها؛ نتیجه احتمالی.
+  \item \term{بهترین تبیین}{Abductive}: انتخاب محتمل‌ترین توضیح برای مشاهده.
+  \item تمرکز فصل: \term{قیاس صوری}{Syllogistic Reasoning}.
+\end{itemize}
+
+\subsection{ساختار \eng{Syllogism}}
+
+\begin{itemize}
+  \item دو مقدمه و یک نتیجه:
+  \[
+  \mathrm{Premise\ 1}+\mathrm{Premise\ 2}
+  \longrightarrow\mathrm{Conclusion}
+  \]
+  \item \term{\eng{Middle Term}}{Middle Term}: ترم مشترک میان دو مقدمه که آن‌ها را به هم متصل می‌کند؛ بدون آن قیاس شکل نمی‌گیرد.
+\end{itemize}
+
+\subsection{چهار \eng{Mode}}
+
+\begin{itemize}
+  \item \textbf{\eng{A} ـ کلی مثبت:} \(\mathrm{All\ A\ are\ B}\)
+  \item \textbf{\eng{I} ـ جزئی مثبت:} \(\mathrm{Some\ A\ are\ B}\)
+  \item \textbf{\eng{E} ـ کلی منفی:} \(\mathrm{No\ A\ are\ B}\)
+  \item \textbf{\eng{O} ـ جزئی منفی:} \(\mathrm{Some\ A\ are\ not\ B}\)
+\end{itemize}
+
+\subsection{\eng{Figure}ها و تعداد فرم‌ها}
+
+\[
+\boxed{
+\begin{array}{c@{\quad}c@{\quad}c@{\quad}c}
+\mathrm{Figure\ 1}&\mathrm{Figure\ 2}&\mathrm{Figure\ 3}&\mathrm{Figure\ 4}\\
+A-B&B-A&A-B&B-A\\
+B-C&C-B&C-B&B-C
+\end{array}}
+\]
+
+\begin{itemize}
+  \item سه گزاره، هرکدام با چهار \eng{Mode} و چهار جایگاه ترم:
+  \[
+  \boxed{4\times4\times4=64\ \text{\rl{فرم ممکن}}}
+  \]
+  \item در صورت‌بندی فصل: \(27\) فرم دارای نتیجهٔ معتبر و \(37\) فرم دارای \term{NVC}{No Valid Conclusion}.
+\end{itemize}
+
+\subsection{نتیجهٔ معتبر و \eng{Barbara}}
+
+\begin{itemize}
+  \item \term{\eng{Valid Conclusion}}{Valid Conclusion}: نتیجه‌ای که در همهٔ حالت‌های ممکن درست باشد و هیچ مثال نقضی نداشته باشد.
+\end{itemize}
+
+\begin{formula}{فرم معتبر Barbara یا \((AAA)-1\)}
+\[
+\mathrm{All\ A\ are\ B}
+\]
+\[
+\mathrm{All\ B\ are\ C}
+\]
+\[
+\boxed{\therefore\ \mathrm{All\ A\ are\ C}}
+\]
+\end{formula}
+
+\begin{itemize}
+  \item درست‌بودن نتیجه در بعضی حالت‌ها کافی نیست؛ باید در \key{تمام} حالت‌ها برقرار باشد.
+  \item نمودار ون ابزار بررسی وجود مثال نقض و اعتبار نتیجه است.
+\end{itemize}
+
+\subsection{قیاس به‌عنوان آزمون \eng{Brain Alignment}}
+
+\begin{itemize}
+  \item هر ۶۴ فرم به انسان و مدل داده می‌شود؛ سپس دقت و مهم‌تر از آن، توزیع پاسخ و خطا مقایسه می‌شود.
+  \item اگر مدل همیشه درست باشد اما در فرم‌های دشوار شبیه انسان خطا نکند، الزاماً هم‌تراز نیست.
+  \item انسان برای تمام فرم‌های منطقی بهینه نشده؛ زندگی واقعی بیشتر به تصمیم سریع، تجربه، بایاس و مغالطه وابسته است.
+\end{itemize}
+
+\subsection{زبان طبیعی و دیتاست \eng{Avicenna}}
+
+\begin{itemize}
+  \item تبدیل \(A,B,C\) به زبان طبیعی مسئله را دشوار می‌کند: مدل باید ترم میانی، رابطهٔ منطقی، مغالطه و \eng{NVC} را تشخیص دهد.
+  \item دیتاست \eng{Avicenna}: حدود \(6000\) نمونهٔ قیاس در زبان طبیعی.
+  \item اجزای هر نمونه:
+  \begin{itemize}
+    \item \eng{Premise 1} و \eng{Premise 2}
+    \item \eng{Syllogistic Relation}
+    \item \eng{Conclusion} یا \eng{NVC}
+  \end{itemize}
+  \item اشتراک واژگانی الزاماً ترم میانی نیست؛ «شیر جنگل» و «شیر آب» واژهٔ مشترک اما معنای متفاوت دارند.
+\end{itemize}
+
+\subsection{\eng{Syllogism} در برابر \eng{Entailment}}
+
+\begin{itemize}
+  \item \term{\eng{Syllogism}}{Syllogism}: دو مقدمه با ترم میانی مشترک؛ نتیجه از ترکیب آن‌ها حاصل می‌شود.
+  \item \term{\eng{Entailment}}{Entailment}: ممکن است یک گزاره و دانش عمومی برای نتیجه‌گیری کافی باشد.
+  \item هر استنتاج زبانی الزاماً قیاس نیست.
+\end{itemize}
+
+\subsection{\eng{Prior Knowledge} و مغالطه}
+
+\begin{itemize}
+  \item «دولت فاسد تورم ایجاد می‌کند؛ ایران تورم دارد؛ پس دولت ایران فاسد است» نامعتبر و شبیه \term{تأیید تالی}{Affirming the Consequent} است.
+  \item نارضایتی یا باور قبلی می‌تواند نتیجهٔ نامعتبر را برای سیستم ۱ پذیرفتنی کند.
+  \item برعکس، یک نتیجهٔ قیاسی معتبر دربارهٔ رشد اقتصادی ممکن است به‌علت تجربهٔ شخصی پذیرفته نشود.
+  \item بنابراین اعتبار منطقی و پذیرش روان‌شناختی یکسان نیستند.
+\end{itemize}
+
+\subsection{مدل در برابر انسان}
+
+\begin{itemize}
+  \item مدل بزرگ‌تر ممکن است در فرم‌های صوری از انسان دقیق‌تر باشد، اما توزیع خطایش متفاوت بماند.
+  \item پاسخ بهتر می‌تواند حاصل دادهٔ بیشتر، حافظه یا دیدن نمونه‌های مشابه باشد؛ نه الزاماً فهم انسانی.
+  \item انسان و مدل هر دو آماری یاد می‌گیرند، اما توزیع تجربه و خطاهای آن‌ها یکسان نیست.
+  \item \term{\eng{Adversarial Data Augmentation}}{Adversarial Data Augmentation}: شناسایی فرم‌های شکست مدل و افزودن هدفمند نمونه‌های مشابه؛ روشی استفاده‌شده برای بهبود روی \eng{Avicenna}.
+\end{itemize}
+
+\begin{trap}{معیار نهایی هم‌ترازی}
+برای سنجش مدل فقط دقت کافی نیست. باید پاسخ درست، خطاهای انسان، خطاهای مدل، توزیع خطا، بازنمایی‌های میانی، اثر دانش قبلی و تفاوت استدلال صوری با استدلال جهان واقعی را هم‌زمان بررسی کرد.
+\end{trap}
+
+\end{document}
